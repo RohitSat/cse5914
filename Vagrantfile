@@ -14,7 +14,7 @@ Vagrant.configure(2) do |config|
             vb.cpus = 1
         end
 
-        ## web.vm.provision "shell", path: "vagrant/web.sh"
+        web.vm.provision "shell", path: "vagrant/web.sh"
         web.vm.network "forwarded_port", guest: 80, host: 5080
     end
 end
