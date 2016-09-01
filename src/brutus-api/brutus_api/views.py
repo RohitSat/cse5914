@@ -3,7 +3,6 @@ import itertools
 from flask import g, request, render_template, json
 
 from brutus_api import app
-from brutus_api.tasks import create_profile
 
 
 @app.route('/')

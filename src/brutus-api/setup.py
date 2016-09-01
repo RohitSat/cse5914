@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='brutus-api',
+    name='brutus_api',
     version='0.1.0',
     description='TODO',
     url='https://github.com/RohitSat/cse5914',
@@ -16,7 +16,7 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'brutus_api=brutus-api.console:main'
+            'brutus_api=brutus_api.console:main'
         ]
     }
 )
