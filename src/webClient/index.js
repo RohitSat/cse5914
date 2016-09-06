@@ -1,6 +1,11 @@
-const postURL = 'http://requestb.in/1kfz7hq1';
 const textInput = document.querySelector('#textInput');
 const submitButton = document.querySelector('#submitButton');
+
+const examples = {
+  'What\'s one plus one?': 'One plus one is two!',
+  'O-H': 'eye, oh',
+  'What\'s the weather like in New York City?': 'The weather in New York is sunny or something.'
+}
 
 const sayThing = (thing) => {
   const synth = window.speechSynthesis;
@@ -11,8 +16,7 @@ const sayThing = (thing) => {
 }
 
 submitButton.addEventListener('click', (e) => {
-  sayThing(textInput.value);
-  if (textInput.value === 'What\'s one plus one?') {
-    sayThing('One plus one is two!');
-  }
+  // sayThing(textInput.value);
+  const response = examples[textInput.value] || 'I don\'t know how to answer that';
+  sayThing(response);
 });
