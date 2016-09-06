@@ -1,0 +1,12 @@
+html {
+  padding: 40px;
+}
+
+textarea {
+  width: 500px;
+  height: 300px;
+}
+
+button {
+  display: block;
+}
