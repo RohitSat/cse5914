@@ -4,7 +4,9 @@ const submitButton = document.querySelector('#submitButton');
 const examples = {
   'What\'s one plus one?': 'One plus one is two!',
   'O-H': 'eye, oh',
-  'What\'s the weather like in New York City?': 'The weather in New York is sunny or something.'
+  'What\'s the weather like in New York City?': 'The weather in New York is sunny or something.',
+  'How many ounces in a gallon?': 'There are 128 fluid ounces in one gallon',
+  'Why is the sky blue?': 'Because I said so',
 }
 
 const sayThing = (thing) => {
@@ -20,3 +22,6 @@ submitButton.addEventListener('click', (e) => {
   const response = examples[textInput.value] || 'I don\'t know how to answer that';
   sayThing(response);
 });
+
+// For the demo
+Object.keys(examples).forEach(example => console.log(example));
