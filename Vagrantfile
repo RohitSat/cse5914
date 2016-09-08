@@ -16,5 +16,6 @@ Vagrant.configure(2) do |config|
 
         web.vm.provision "shell", path: "vagrant/web.sh"
         web.vm.network "forwarded_port", guest: 5000, host: 5000
+        web.vm.network "forwarded_port", guest: 6000, host: 6000
     end
 end
