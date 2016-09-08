@@ -22,12 +22,12 @@ install -o root -g root -m 0644 \
   /etc/init/brutus-api.conf
 
 install -o root -g root -m 0644 \
-  /vagrant/vagrant/web-upstart-brutus-math-module.conf \
-  /etc/init/brutus-math-module.conf
+  /vagrant/vagrant/web-upstart-brutus-module-math.conf \
+  /etc/init/brutus-module-math.conf
 
 initctl reload-configuration
 start brutus-api
-start brutus-math-module
+start brutus-module-math
 
 # configure the vagrant user's profile
 echo 'source /home/vagrant/env/bin/activate' >> /home/vagrant/.profile
