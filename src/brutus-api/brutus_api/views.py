@@ -22,33 +22,12 @@ def create_request():
     if request.method == 'GET':
         # return requests and their status
         return json.jsonify([
-            {
-                'id': 1,
-                'state': 'pending',
-                'request': {
-                    'text': 'what is 7 cm in meters?'
-                }
-            },
-            {
-                'id': 2,
-                'state': 'done',
-                'request': {
-                    'text': 'what is 3 + 4?'
-                },
-                'result': {
-                    'say': 'the answer is 7'
-                }
-            }
+            {'key': 'value'},
+            {'key': 'value'}
         ])
 
     # TODO: do work
-    return josn.jsonify({
-        'id': 3,
-        'state': 'pending',
-        'request': {
-            'text': 'what is the time?'
-        }
-    })
+    return josn.jsonify({'key': 'value'})
 
 @app.route('/api/request/<int:request_id>')
 def get_request(request_id):
