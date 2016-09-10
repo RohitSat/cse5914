@@ -52,3 +52,9 @@ Run the Math module:
 ```bash
 brutus_module_math --host 0.0.0.0 --port 5010
 ```
+
+## References
+
+* Python
+  * PEP8 Style Guide: https://www.python.org/dev/peps/pep-0008/
+  * Pytest: http://docs.pytest.org/en/latest/
