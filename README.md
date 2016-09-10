@@ -31,26 +31,29 @@ Install the required python packages:
 
 ```bash
 pip install -r src/brutus-api/requirements.txt
-pip install -r src/brutus-module-math/requirements.txt
 ```
 
-Install the API and module projects:
+Install the project as an in-place editable package:
 
 ```bash
 pip install -e $(pwd)/src/brutus-api
-pip install -e $(pwd)/src/brutus-module-math
 ```
 
-Run the API project:
+Run the project:
 
 ```bash
 brutus_api --host 0.0.0.0 --port 5000
 ```
 
-Run the Math module:
+## Tests
+
+Navigate to the project directory and run the tests using Make targets:
 
 ```bash
-brutus_module_math --host 0.0.0.0 --port 5010
+cd src/brutus-api
+make test-style  # run style tests
+make test-unit   # run unit tests
+make test        # run all tests
 ```
 
 ## References
