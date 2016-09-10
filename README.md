@@ -15,8 +15,8 @@ vagrant up
 
 Browse some of the available services:
 
-* Brutus API: http://localhost:5000/
-* Brutus Math Module: http://localhost:6000/
+* Brutus API: http://127.0.0.1:5000/
+* Brutus Math Module: http://127.0.0.1:5010/
 
 ## Local Development
 
