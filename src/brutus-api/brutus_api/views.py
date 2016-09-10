@@ -27,7 +27,7 @@ def create_request():
         ])
 
     # TODO: do work
-    return josn.jsonify({'key': 'value'})
+    return json.jsonify({'key': 'value'})
 
 @app.route('/api/request/<int:request_id>')
 def get_request(request_id):
@@ -36,7 +36,7 @@ def get_request(request_id):
     """
 
     # TODO: do work
-    return josn.jsonify({
+    return json.jsonify({
         'id': 3,
         'state': 'pending',
         'request': {
