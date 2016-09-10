@@ -6,3 +6,6 @@
 *.pyo
 *.egg-info
 __pycache__
+
+# python - pytest
+.cache
