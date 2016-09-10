@@ -13,6 +13,7 @@ def index():
 
     return "Brutus API"
 
+
 @app.route('/api/request', methods=['GET', 'POST'])
 def create_request():
     """
@@ -28,6 +29,7 @@ def create_request():
 
     # TODO: do work
     return json.jsonify({'key': 'value'})
+
 
 @app.route('/api/request/<int:request_id>')
 def get_request(request_id):
