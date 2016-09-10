@@ -37,4 +37,4 @@ test-style: check-env
 		`cat $(PROJECT).egg-info/top_level.txt | xargs echo`
 
 test-unit: check-env
-	pytest
+	pytest -v
