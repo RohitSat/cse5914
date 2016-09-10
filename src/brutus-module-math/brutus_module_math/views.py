@@ -11,7 +11,7 @@ def index():
     Get the index page.
     """
 
-    return "Hello, World!"
+    return "Brutus Math Module"
 
 @app.route('/api/request', methods=['GET', 'POST'])
 def create_request():
