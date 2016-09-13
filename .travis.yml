@@ -5,5 +5,5 @@ before_install:
     - pip install -r src/brutus-api/requirements.txt
     - pip install -r src/brutus-module-math/requirements.txt
 script:
-    - pushd src/brutus-api ; make test ; popd
-    - pushd src/brutus-module-math ; make test ; popd
+    - pushd src/brutus-api ; make test
+    - pushd src/brutus-module-math ; make test
