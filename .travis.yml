@@ -8,5 +8,4 @@ install:
     - pip install -e src/brutus-api
     - pip install -e src/brutus-module-math
 script:
-    - which py.test
     - make test
