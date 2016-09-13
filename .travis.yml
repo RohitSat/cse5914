@@ -4,7 +4,8 @@ python:
 before_install:
     - pip install -r src/brutus-api/requirements.txt
     - pip install -r src/brutus-module-math/requirements.txt
+install:
+    - pip install -e src/brutus-api
+    - pip install -e src/brutus-module-math
 script:
-    - env
-    - which pytest
     - make test
