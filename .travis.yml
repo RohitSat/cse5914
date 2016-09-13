@@ -1,7 +1,9 @@
 language: python
 python:
   - "3.5"
-install:
+before_install:
     - pip install -r src/brutus-api/requirements.txt
     - pip install -r src/brutus-module-math/requirements.txt
-script: make test
+script:
+    - pushd src/brutus-api ; make test ; popd
+    - pushd src/brutus-module-math ; make test ; popd
