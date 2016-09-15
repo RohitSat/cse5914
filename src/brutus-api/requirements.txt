@@ -1,6 +1,7 @@
 watson-developer-cloud==0.18.0
 gunicorn==19.6.0
 Flask==0.11.1
+requests==2.11.1
 
 # testing
 pep8
