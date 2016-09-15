@@ -9,6 +9,10 @@ const submitButton = document.querySelector('#submitButton');
 //   'Why is the sky blue?': 'Because I said so',
 // }
 
+/**
+ * "Says" a thing out loud using the speechSynthesis api
+ * @param  {string} thing thing to say out loud
+ */
 const sayThing = (thing) => {
   const synth = window.speechSynthesis;
   const utterance = new SpeechSynthesisUtterance(thing);
@@ -23,7 +27,35 @@ submitButton.addEventListener('click', (e) => {
   sayThing(response);
 });
 
-const sendQuery = (query) => {
+/**
+ * writes to div.output using a cool typing style.
+ * @param  {string} text       the output text to be rendered
+ * @param  {Number} [time=500] the total time the whole typing should take
+ */
+const writeToOutputBox = (text, time = 500) => {
+  const output = document.querySelector('.output');
+  output.innerHTML = '';
+  const timeout = time / text.length;
+  let counter = 0;
+
+  const interval = setInterval(
+    () => {
+      if (counter > text.length) {
+        clearInterval(interval);
+        return;
+      }
+      output.innerHTML = text.substring(0, counter++);
+    },
+    timeout
+  );
+};
+
+/**
+ * Sends an HTTP post request to a hard-coded url entailing the query in its body
+ * @param  {string} query  user's query
+ * @return {Promise}       promise returned from fetch
+ */
+const postQuery = (query) => {
   const url = 'http://requestb.in/1e0i6cq1';
   const queryRequestSettings = {
     method: 'POST',
@@ -34,7 +66,7 @@ const sendQuery = (query) => {
   };
   const extractJobID = (response) => {
     return response.status;
-  }
+  };
   const startPolling = (jobID) => {
     const poll = () => {
       clearTimeout(pollingID);
@@ -43,7 +75,7 @@ const sendQuery = (query) => {
       poll,
       pollingInterval
     );
-  }
+  };
 
   fetch(url, queryRequestSettings)
     .then(extractJobID)
