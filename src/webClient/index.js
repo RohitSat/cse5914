@@ -1,14 +1,6 @@
 const textInput = document.querySelector('#textInput');
 const submitButton = document.querySelector('#submitButton');
 
-// const examples = {
-//   'What\'s one plus one?': 'One plus one is two!',
-//   'O-H': 'eye, oh',
-//   'What\'s the weather like in New York City?': 'The weather in New York is sunny or something.',
-//   'How many ounces in a gallon?': 'There are 128 fluid ounces in one gallon',
-//   'Why is the sky blue?': 'Because I said so',
-// }
-
 /**
  * "Says" a thing out loud using the speechSynthesis api
  * @param  {string} thing thing to say out loud
@@ -22,9 +14,8 @@ const sayThing = (thing) => {
 }
 
 submitButton.addEventListener('click', (e) => {
-  // sayThing(textInput.value);
-  const response = examples[textInput.value] || 'I don\'t know how to answer that';
-  sayThing(response);
+  writeToOutputBox('Processing:', e.target.value);
+  postQuery(e.target.value);
 });
 
 /**
@@ -40,11 +31,11 @@ const writeToOutputBox = (text, time = 500) => {
 
   const interval = setInterval(
     () => {
-      if (counter > text.length) {
+      if (counter++ > text.length) {
         clearInterval(interval);
-        return;
+      } else {
+        output.innerHTML = text.substring(0, counter);
       }
-      output.innerHTML = text.substring(0, counter++);
     },
     timeout
   );
@@ -58,28 +49,49 @@ const writeToOutputBox = (text, time = 500) => {
 const postQuery = (query) => {
   const url = 'http://requestb.in/1e0i6cq1';
   const queryRequestSettings = {
-    method: 'POST',
-    headers: new Headers(),
-    mode: 'no-cors',
-    cache: 'no-cache',
     body: 'query=' + encodeURIComponent(query),
   };
-  const extractJobID = (response) => {
-    return response.status;
-  };
-  const startPolling = (jobID) => {
-    const poll = () => {
-      clearTimeout(pollingID);
-    };
-    const pollingID = setTimeout(
-      poll,
-      pollingInterval
-    );
-  };
-
+  const fails = 0;
   fetch(url, queryRequestSettings)
-    .then(extractJobID)
+    .then(res => res.ok ? res : throw new Error('Error with posting query'))
+    .then(res => res.json())
+    .then(obj => obj.jobID)
     .then(startPolling)
-    .catch(err => console.log('error sending query', err));
+    .catch(er => {
+      console.log(er);
+      if (fails++ < 3) {
+        postQuery(query);
+      }
+    });
+};
 
+/**
+ * polls a hard-coded url with a give jobID
+ * @param  {string} jobID  id of the job to poll for
+ * @return {[type]}       [description]
+ */
+const startPolling = (jobID) => {
+  const url = `sampleURL${jobID}`;
+  const timeout = 1000;
+  const fails = 0;
+  const poll = () => {
+    fetch(url)
+      .then(res => res.ok ? res : throw new Error('Error polling for response, jobID:', jobID))
+      .then(res => res.json())
+      .then(obj => {
+        if (obj.status === 'complete') {
+          writeToOutputBox(obj.output.text);
+        } else if (obj.status === 'processing') {
+          setTimeout(poll(), timeout);
+        }
+      })
+      .catch(er => {
+        console.log(er);
+        if (fails++ < 3) {
+          setTimeout(poll(), timeout);
+        }
+      });
+  };
+
+  const timeoutClear = setTimeout(poll(), timeout)    ;
 }
