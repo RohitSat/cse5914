@@ -61,8 +61,8 @@ def sendTrainingData(trainingFile):
 	for c in classifiers:
 		print(c)
 	print('use \'brutus-api\' for the backend classifier to decide which module to use')
-	classifierName = input('What classifier are you training? (chose from above or enter new classifier' ) 
-	with open(args.trainingFile, 'rb') as training_data:
+	classifierName = input('What classifier are you training? (chose from above or enter new classifier) ') 
+	with open(trainingFile, 'rb') as training_data:
 		results = nlc.create(training_data=training_data, name=classifierName)
 		print(json.dumps(results, indent=2))
 
