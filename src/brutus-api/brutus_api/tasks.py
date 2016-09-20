@@ -26,7 +26,6 @@ def get_answer(text):
         db=app.config['REDIS_DB'])
 
     job = get_current_job(connection=redis)
-    
     # get the watson username and password
     username = app.config['WATSON_USERNAME']
     password = app.config['WATSON_PASSWORD']
@@ -34,8 +33,7 @@ def get_answer(text):
     # set up natural language processor object and pass it the classifier name
     nlc = nlp.Nlp(
         username,
-        password, 
+        password,
         classifierName)
     result = nlc.classify(text)
-     
-    return {'module':result}
+    return {'module': result}
