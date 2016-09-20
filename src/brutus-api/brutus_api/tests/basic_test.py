@@ -25,7 +25,7 @@ class BasicTestCase(BrutusTestCase):
         assert hasattr(create_data, 'id')
         request_id = create_data['id']
 
-        assert isinstance(request_id, int)
+        assert isinstance(request_id, str)
 
         # verify the request contains the input data
         assert hasattr(create_data, 'input')
@@ -42,7 +42,7 @@ class BasicTestCase(BrutusTestCase):
         assert hasattr(retrieve_data, 'id')
         request_id = retrieve_data['id']
 
-        assert isinstance(request_id, int)
+        assert isinstance(request_id, str)
 
         # verify the request contains the input data
         assert hasattr(retrieve_data, 'input')

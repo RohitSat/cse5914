@@ -19,6 +19,7 @@ Browse some of the available services:
 
 * Brutus API: http://127.0.0.1:5000/
 * Brutus Math Module: http://127.0.0.1:5010/
+* Brutus Weather Module: http://127.0.0.1:5020/
 
 ## Local Development
 
@@ -68,3 +69,4 @@ make test        # run all tests
 * Python
   * PEP8 Style Guide: https://www.python.org/dev/peps/pep-0008/
   * Pytest: http://docs.pytest.org/en/latest/
+  * HTTTPretty: https://github.com/gabrielfalcao/HTTPretty

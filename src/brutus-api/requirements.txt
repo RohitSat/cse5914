@@ -7,3 +7,4 @@ rq==0.6.0
 # testing
 pep8
 pytest
+HTTPretty
