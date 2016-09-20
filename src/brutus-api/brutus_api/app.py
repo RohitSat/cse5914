@@ -19,8 +19,7 @@ try:
         service_data = json.loads(service_file.read())
 except Exception as e:
     print(e)
-    print("Put file auth.json with credentials for NLC in the src/brutus_api directory")
-    print("Include credential file 'auth.json' in src/brutus_api directory")
+    print("Put file auth.json with credentials for NLC in src/brutus_api")
     print("See README for details")
     sys.exit(-1)
 
