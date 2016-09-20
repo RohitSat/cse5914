@@ -5,6 +5,7 @@ from watson_developer_cloud import AuthorizationV1
 from watson_developer_cloud import NaturalLanguageClassifierV1
 
 
+#TODO put this somewhere that it can be used by other modules if needed
 class Nlp(object):
     
     classifierId = None

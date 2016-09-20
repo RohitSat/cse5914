@@ -47,6 +47,11 @@ Run the project:
 brutus_api --host 0.0.0.0 --port 5000
 ```
 
+Run the worker for background tasks:
+
+```bash
+rq worker
+```
 ## Tests
 
 Navigate to the project directory and run the tests using Make targets:

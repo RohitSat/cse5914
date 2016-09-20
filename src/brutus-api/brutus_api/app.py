@@ -11,6 +11,7 @@ from redis import Redis
 # create the flask application
 app = Flask(__name__)
 
+
 app.config.update(
     DEBUG=os.getenv('DEBUG', 'False') in ['true', 'True'],
     SECRET_KEY=os.getenv('SECRET_KEY', str(uuid.uuid4())),
