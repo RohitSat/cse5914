@@ -17,4 +17,9 @@ textarea {
 
 button {
   display: block;
+  height: 50px;
+  width: 300px;
+  border-radius: 5px;
+}
+#submitButton.ready {
 }

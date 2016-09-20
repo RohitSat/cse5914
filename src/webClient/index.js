@@ -1,6 +1,21 @@
 const textInput = document.querySelector('#textInput');
 const submitButton = document.querySelector('#submitButton');
-
+const outputBox = document.querySelector('.output');
+const buttonStates = {
+  ready: () => {
+    writeToBox('Submit a query', submitButton);
+    submitButton.className = "ready";
+  },
+  submitting: () => {
+    writeToBox('Submitting...', submitButton);
+    submitButton.className = "submitting";
+  },
+  processing: () => {
+    writeToBox('Processing...', submitButton);
+    submitButton.className = 'processing';
+  },
+};
+document.addEventListener('DOMContentLoaded', buttonStates.ready);
 /**
  * "Says" a thing out loud using the speechSynthesis api
  * @param  {string} thing thing to say out loud
@@ -11,11 +26,13 @@ const sayThing = (thing) => {
   const engVoice = synth.getVoices()[3];
   utterance.voice = engVoice;
   synth.speak(utterance);
-}
+};
 
 submitButton.addEventListener('click', (e) => {
-  writeToOutputBox('Processing:', e.target.value);
-  postQuery(e.target.value);
+  const val = textInput.value;
+  writeToBox('Processing:' + val, outputBox);
+  submitButton.innerHTML = 'Sending Query...';
+  postQuery(val);
 });
 
 /**
@@ -23,9 +40,8 @@ submitButton.addEventListener('click', (e) => {
  * @param  {string} text       the output text to be rendered
  * @param  {Number} [time=500] the total time the whole typing should take
  */
-const writeToOutputBox = (text, time = 500) => {
-  const output = document.querySelector('.output');
-  output.innerHTML = '';
+const writeToBox = (text, box, time = 500) => {
+  box.innerHTML = '';
   const timeout = time / text.length;
   let counter = 0;
 
@@ -34,7 +50,7 @@ const writeToOutputBox = (text, time = 500) => {
       if (counter++ > text.length) {
         clearInterval(interval);
       } else {
-        output.innerHTML = text.substring(0, counter);
+        box.innerHTML = text.substring(0, counter);
       }
     },
     timeout
@@ -47,22 +63,23 @@ const writeToOutputBox = (text, time = 500) => {
  * @return {Promise}       promise returned from fetch
  */
 const postQuery = (query) => {
-  const url = 'http://requestb.in/1e0i6cq1';
+  const url = 'http://requestb.in/pmq4mmpm';
   const queryRequestSettings = {
     body: 'query=' + encodeURIComponent(query),
+    method: 'post',
+    mode: 'no-cors',
   };
-  const fails = 0;
   fetch(url, queryRequestSettings)
-    .then(res => res.ok ? res : throw new Error('Error with posting query'))
+    .then(res => {
+      if (res.ok) {
+        return res;
+      }
+      throw new Error('Error with posting query');
+    })
     .then(res => res.json())
     .then(obj => obj.jobID)
     .then(startPolling)
-    .catch(er => {
-      console.log(er);
-      if (fails++ < 3) {
-        postQuery(query);
-      }
-    });
+    .catch(console.log);
 };
 
 /**
@@ -73,10 +90,12 @@ const postQuery = (query) => {
 const startPolling = (jobID) => {
   const url = `sampleURL${jobID}`;
   const timeout = 1000;
-  const fails = 0;
   const poll = () => {
     fetch(url)
-      .then(res => res.ok ? res : throw new Error('Error polling for response, jobID:', jobID))
+      .then(res => {
+        if (res.ok) return res;
+        throw new Error('Error polling for response, jobID:', jobID)
+      })
       .then(res => res.json())
       .then(obj => {
         if (obj.status === 'complete') {
@@ -85,13 +104,8 @@ const startPolling = (jobID) => {
           setTimeout(poll(), timeout);
         }
       })
-      .catch(er => {
-        console.log(er);
-        if (fails++ < 3) {
-          setTimeout(poll(), timeout);
-        }
-      });
+      .catch(console.log);
   };
 
-  const timeoutClear = setTimeout(poll(), timeout)    ;
+  const timeoutClear = setTimeout(poll(), timeout);
 }
