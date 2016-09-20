@@ -10,7 +10,7 @@ def get_job_details(job):
     return {
         'id': job.id,
         'status': job.get_status(),
-        'input': { 'text': job.meta['input']},
+        'input': {'text': job.meta['input']},
         'output': job.result}
 
 
