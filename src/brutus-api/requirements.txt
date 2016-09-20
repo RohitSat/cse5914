@@ -6,3 +6,4 @@ requests==2.11.1
 # testing
 pep8
 pytest
+HTTPretty
