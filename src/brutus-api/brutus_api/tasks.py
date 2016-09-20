@@ -10,7 +10,7 @@ from watson_developer_cloud import AuthorizationV1
 
 classifierName = "brutus-api"
 baseurl = "http://127.0.0.1:"
-moduleAddresses = { 'math':'5010', 'weather':'5020'}
+moduleAddresses = { 'math':'5010', 'weather':'5020', 'temperature':'5010', 'conditions':'5010'}
 
 def get_answer(text):
     """
@@ -38,8 +38,9 @@ def get_answer(text):
         classifierName)
     #get the module name
     module = nlc.classify(text)
-    #print(baseUrl + moduleAddresses[module])
-    #request = {"text":text}
+    print(baseurl + moduleAddresses[module])
+
+    request = {"text":text}
     #get the result from the module
-    return {'input':{'text':text},'output':{'module':module}}
+    return { 'output':{'text':module}}
 

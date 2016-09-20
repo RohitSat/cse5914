@@ -10,8 +10,8 @@ def get_job_details(job):
     return {
         'id': job.id,
         'status': job.get_status(),
-        'text': job.meta['text'],
-        'result': job.result}
+        'input': { 'text': job.meta['input']},
+        'output': job.result}
 
 
 @app.route('/')
@@ -34,15 +34,17 @@ def create_request():
         job_ids = itertools.chain(
             g.started_registry.get_job_ids(),
             g.finished_registry.get_job_ids())
-
+        print(job_ids)
         jobs = itertools.chain(
             g.queue.get_jobs(),
             [g.queue.fetch_job(job_id) for job_id in job_ids])
+        print(jobs)
         # return requests and their status
         return json.jsonify([get_job_details(job) for job in jobs])
-
-    job = g.queue.enqueue(get_answer, request.form['text'])
-    job.meta['text'] = request.form['text']
+    data = request.get_json()
+    job = g.queue.enqueue(get_answer, data['text'])
+    job.meta['input'] = data['text']
+    job.save()
     return json.jsonify(get_job_details(job))
 
 
