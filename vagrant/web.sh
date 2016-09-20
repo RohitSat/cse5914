@@ -26,7 +26,7 @@ pip install -e /vagrant/src/brutus-module-weather
 # fix virtualenv permissions (because we're running as root)
 chown -R vagrant:vagrant /home/vagrant/env
 
-# setup the hubspy web app and worker
+# setup the brutus-api web app and worker
 install -o root -g root -m 0644 \
   /vagrant/vagrant/web-upstart-brutus-api.conf \
   /etc/init/brutus-api.conf
@@ -39,10 +39,15 @@ install -o root -g root -m 0644 \
     /vagrant/vagrant/web-upstart-brutus-module-weather.conf \
     /etc/init/brutus-module-weather.conf
 
+install -o root -g root -m 0644 \
+  /vagrant/vagrant/web-upstart-brutus-api-worker.conf \
+  /etc/init/brutus-api-worker.conf
+
 initctl reload-configuration
 start brutus-api
 start brutus-module-math
 start brutus-module-weather
+start brutus-api-worker
 
 # configure the vagrant user's profile
 echo 'source /home/vagrant/env/bin/activate' >> /home/vagrant/.profile
