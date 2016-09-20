@@ -12,3 +12,7 @@ __pycache__
 
 # Virtualenv stuff
 env/
+
+
+#authentication info
+auth.json
