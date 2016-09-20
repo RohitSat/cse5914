@@ -1,5 +1,13 @@
 #!/bin/bash
 
+#install redis
+add-apt-repository -y ppa:chris-lea/redis-server
+apt-get update
+apt-get -y install redis-server
+
+# configure redis to bind to all interfaces (so we can reach it outside the VM)
+sed -i -e 's/bind 127.0.0.1/bind 0.0.0.0/g' /etc/redis/redis.conf
+
 # create a virtualenv for the application
 apt-get -y install python-virtualenv python3-dev
 virtualenv --python=/usr/bin/python3 /home/vagrant/env
