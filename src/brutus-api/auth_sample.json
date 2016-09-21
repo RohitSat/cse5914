@@ -1,7 +1,0 @@
-  {
-    "credentials": {
-      "url": "https://gateway.watsonplatform.net/natural-language-classifier/api",
-      "password": "XXXXXXXXX",
-      "username": "XXXXXXXXXXXXXXX"
-    }
-  }

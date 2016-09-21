@@ -10,6 +10,7 @@ from watson_developer_cloud import AuthorizationV1
 
 classifierName = "brutus-api"
 baseurl = "http://127.0.0.1:"
+
 # TODO remove unused classifiers
 moduleAddresses = {'math': '5010',
                    'weather': '5020',
@@ -33,8 +34,8 @@ def get_answer(text):
 
     job = get_current_job(connection=redis)
     # get the watson username and password
-    username = app.config['WATSON_USERNAME']
-    password = app.config['WATSON_PASSWORD']
+    username = app.config['NLC_WATSON_USERNAME']
+    password = app.config['NLC_WATSON_PASSWORD']
 
     # set up natural language processor object and pass it the classifier name
     nlc = nlp.Nlp(
