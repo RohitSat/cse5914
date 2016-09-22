@@ -20,7 +20,8 @@ app.config.update(
     REDIS_PORT=int(os.getenv('REDIS_PORT', '6379')),
     REDIS_DB=int(os.getenv('REDIS_DB', '0')),
     NLC_WATSON_USERNAME=os.getenv('NLC_WATSON_USERNAME'),
-    NLC_WATSON_PASSWORD=os.getenv('NLC_WATSON_PASSWORD'))
+    NLC_WATSON_PASSWORD=os.getenv('NLC_WATSON_PASSWORD'),
+    NLC_CLASSIFIER_NAME=os.getenv('BRUTUS_API_NLC_CLASSIFIER'))
 
 
 # register event handlers
