@@ -4,3 +4,6 @@ Flask==0.11.1
 # testing
 pep8
 pytest
+
+#openweatherapi
+pyowm
