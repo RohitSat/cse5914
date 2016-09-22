@@ -8,7 +8,7 @@ import requests
 
 from watson_developer_cloud import AuthorizationV1
 
-#TODO move to database
+# TODO move to database
 baseurl = "http://127.0.0.1:"
 moduleAddresses = {'math': '5010',
                    'weather': '5020',
@@ -35,7 +35,6 @@ def get_answer(text):
     username = app.config['NLC_WATSON_USERNAME']
     password = app.config['NLC_WATSON_PASSWORD']
     classifierName = app.config['NLC_CLASSIFIER_NAME']
-    
     # set up natural language processor object and pass it the classifier name
     nlc = nlp.Nlp(
         username,
@@ -46,6 +45,6 @@ def get_answer(text):
 
     url = baseurl + moduleAddresses[module] + "/api/request"
     print(url)
-    r = requests.post(url, json={'text':text})
+    r = requests.post(url, json={'text': text})
     # get the result from the module
-    return  r.text.replace("\n", "")
+    return r.text.replace("\n", "")
