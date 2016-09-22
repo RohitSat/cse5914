@@ -21,14 +21,11 @@ def create_request():
     """
     Get requests or create a new request.
     """
-    data=request.get_json()
-    input_data=data['input']
-    contents=input_data['text']
+    data = request.get_json()
+    input_data = data['input']
+    contents = input_data['text']
     # 'what is ten plus ten'
-    resultstring=nlCalc.calculate(contents)
+    resultstring = nlCalc.calculate(contents)
 
-    result={"input": input_data, 'output':{'text': resultstring}}   
-    # TODO: do work
+    result = {"input": input_data, 'output': {'text': resultstring}}
     return json.jsonify(result)
-
-
