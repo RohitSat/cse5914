@@ -2,7 +2,6 @@ import unittest
 from abc import ABCMeta
 
 import httpretty
-
 from flask import json
 
 import brutus_api
@@ -50,14 +49,20 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
         httpretty.register_uri(
             httpretty.POST,
             "http://127.0.0.1:5010/api/request",
-            body='{"input": {"text": "what is 1 plus 1"}, "output": {"text": "2"}}',
+            body=json.dumps({
+                "input": {"text": "what is 1 plus 1"}m
+                "output": {"text": "2"}
+            }),
             content_type="application/json")
 
         # weather module
         httpretty.register_uri(
             httpretty.POST,
             "http://127.0.0.1:5020/api/request",
-            body='{"input": {"text": "what is the weather"}, "output": {"text": "sunny"}}',
+            body=json.dumps({
+                "input": {"text": "what is the weather"},
+                "output": {"text": "sunny"}
+            }),
             content_type="application/json")
 
     def parse_response(self, response):

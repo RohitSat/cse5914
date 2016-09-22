@@ -11,7 +11,8 @@ setup(
     packages=find_packages(),
     install_requires=[
         'Flask',
-        'watson-developer-cloud'
+        'watson-developer-cloud',
+        'rq'
     ],
 
     entry_points={
