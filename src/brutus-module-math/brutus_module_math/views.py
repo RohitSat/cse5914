@@ -4,6 +4,8 @@ from flask import g, request, render_template, json
 
 from brutus_module_math import app
 
+from brutus_module_math import nlCalc
+
 
 @app.route('/')
 def index():
@@ -14,34 +16,16 @@ def index():
     return "Brutus Math Module"
 
 
-@app.route('/api/request', methods=['GET', 'POST'])
+@app.route('/api/request', methods=['POST'])
 def create_request():
     """
     Get requests or create a new request.
     """
+    data = request.get_json()
+    input_data = data['input']
+    contents = input_data['text']
+    # 'what is ten plus ten'
+    resultstring = nlCalc.calculate(contents)
 
-    if request.method == 'GET':
-        # return requests and their status
-        return json.jsonify([
-            {'key': 'value'},
-            {'key': 'value'}
-        ])
-
-    # TODO: do work
-    return json.jsonify({'key': 'value'})
-
-
-@app.route('/api/request/<int:request_id>')
-def get_request(request_id):
-    """
-    Get a request.
-    """
-
-    # TODO: do work
-    return json.jsonify({
-        'id': 3,
-        'state': 'pending',
-        'request': {
-            'text': 'what is the time?'
-        }
-    })
+    result = {"input": input_data, 'output': {'text': resultstring}}
+    return json.jsonify(result)
