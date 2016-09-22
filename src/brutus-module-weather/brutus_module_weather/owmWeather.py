@@ -45,5 +45,5 @@ def get_temperature(weather):
     tempdict = weather.get_temperature(unit="fahrenheit")
     curtemp = tempdict['temp']
     resultstring = "The current temperature is "
-    resultsring = resultstring + str(curtemp) + " degrees fahrenheit."
+    resultstring = resultstring + str(curtemp) + " degrees fahrenheit."
     return resultstring
