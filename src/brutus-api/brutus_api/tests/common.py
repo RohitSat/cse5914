@@ -50,7 +50,7 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
             httpretty.POST,
             "http://127.0.0.1:5010/api/request",
             body=json.dumps({
-                "input": {"text": "what is 1 plus 1"}m
+                "input": {"text": "what is 1 plus 1"},
                 "output": {"text": "2"}
             }),
             content_type="application/json")
