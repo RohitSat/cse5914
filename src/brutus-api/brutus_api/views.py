@@ -3,6 +3,15 @@ import itertools
 from flask import g, request, render_template, json
 
 from brutus_api import app
+from brutus_api.tasks import get_answer
+
+
+def get_job_details(job):
+    return {
+        'id': job.id,
+        'status': job.get_status(),
+        'input': {'text': job.meta['input']},
+        'output': job.result}
 
 
 @app.route('/')
@@ -21,27 +30,28 @@ def create_request():
     """
 
     if request.method == 'GET':
+        # retrieve started, queued, and finished jobs
+        job_ids = itertools.chain(
+            g.started_registry.get_job_ids(),
+            g.finished_registry.get_job_ids())
+        print(job_ids)
+        jobs = itertools.chain(
+            g.queue.get_jobs(),
+            [g.queue.fetch_job(job_id) for job_id in job_ids])
+        print(jobs)
         # return requests and their status
-        return json.jsonify([
-            {'key': 'value'},
-            {'key': 'value'}
-        ])
+        return json.jsonify([get_job_details(job) for job in jobs])
+    data = request.get_json()
+    job = g.queue.enqueue(get_answer, data['text'])
+    job.meta['input'] = data['text']
+    job.save()
+    return json.jsonify(get_job_details(job))
 
-    # TODO: do work
-    return json.jsonify({'key': 'value'})
 
-
-@app.route('/api/request/<int:request_id>')
+@app.route('/api/request/<uuid:request_id>')
 def get_request(request_id):
     """
     Get a request.
     """
-
-    # TODO: do work
-    return json.jsonify({
-        'id': 3,
-        'state': 'pending',
-        'request': {
-            'text': 'what is the time?'
-        }
-    })
+    job = g.queue.fetch_job(str(request_id))
+    return json.jsonify(get_job_details(job))
