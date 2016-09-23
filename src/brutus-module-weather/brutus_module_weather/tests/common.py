@@ -19,14 +19,15 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
         Set up the test case.
         """
 
-        # enable httpretty socket patch
-        httpretty.enable()
-
         # configure the application
-        brutus_module_weather.app.config['TESTING'] = True
+        self.app = brutus_module_weather.app
+        self.app.config['TESTING'] = True
 
         # create the test client
-        self.app = brutus_module_weather.app.test_client()
+        self.client = self.app.test_client()
+
+        # enable httpretty socket patch
+        httpretty.enable()
 
     def tearDown(self):
         """
@@ -35,8 +36,6 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
 
         # disable httpretty socket patch
         httpretty.disable()
-
-        # clear httpretty internal state
         httpretty.reset()
 
     def register_open_weather_map_urls(self):
