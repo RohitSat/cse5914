@@ -18,7 +18,7 @@ class BasicTestCase(BrutusTestCase):
 
         # create the request
         request_data = {'input': {'text': 'what is 1 plus 1'}}
-        api_data, api_response = self.parse_response(self.app.post(
+        api_data, api_response = self.parse_response(self.client.post(
             self.BRUTUS_API_REQUEST,
             data=json.dumps(request_data),
             content_type='application/json'))
