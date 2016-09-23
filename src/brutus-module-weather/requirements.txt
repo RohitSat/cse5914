@@ -1,9 +1,8 @@
 gunicorn==19.6.0
 Flask==0.11.1
+pyowm==2.4.0
 
 # testing
 pep8
 pytest
-
-#openweatherapi
-pyowm
+HTTPretty

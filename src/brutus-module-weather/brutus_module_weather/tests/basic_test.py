@@ -16,6 +16,9 @@ class BasicTestCase(BrutusTestCase):
         provided input data and some output data.
         """
 
+        # register open weather map URLs with generic data
+        self.register_open_weather_map_urls()
+
         # create the request
         request_data = {'input': {'text': 'what is the weather'}}
         api_data, api_response = self.parse_response(self.app.post(
