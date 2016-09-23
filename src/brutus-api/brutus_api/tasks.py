@@ -11,9 +11,7 @@ from watson_developer_cloud import AuthorizationV1
 # TODO move to database
 baseurl = "http://127.0.0.1:"
 moduleAddresses = {'math': '5010',
-                   'weather': '5020',
-                   'temperature': '5010',
-                   'conditions': '5010'}
+                   'weather': '5020'}
 
 
 def get_answer(text):
@@ -47,10 +45,11 @@ def get_answer(text):
     # get the result from the module
     url = baseurl + moduleAddresses[module] + "/api/request"
     print(url)
-    r = requests.post(url, json={'input' : {'text': text}})
+    r = requests.post(url, json={'input': {'text': text}})
     print(r)
-    if(r.text == None):
-        return {'text': 'I am sorry, there was an error when finding the answer to your question'}
+    if(r.text is None):
+        error = 'I am sorry, an error occurred'
+        return {'text': error}
     jsonResult = json.loads(r.text)
     print(jsonResult)
     return jsonResult['output']
