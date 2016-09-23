@@ -12,7 +12,6 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
     """
 
     BRUTUS_API_REQUEST = '/api/request'
-    BRUTUS_API_REQUEST_BY_ID = '/api/request/{id}'
 
     def setUp(self):
         """

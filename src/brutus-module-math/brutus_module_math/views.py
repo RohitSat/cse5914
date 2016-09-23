@@ -3,7 +3,6 @@ import itertools
 from flask import g, request, render_template, json
 
 from brutus_module_math import app
-
 from brutus_module_math import nlCalc
 
 

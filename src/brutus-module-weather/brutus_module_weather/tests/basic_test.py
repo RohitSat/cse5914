@@ -1,5 +1,7 @@
 import unittest
 
+from flask import json
+
 from .common import BrutusTestCase
 
 
@@ -15,21 +17,23 @@ class BasicTestCase(BrutusTestCase):
         """
 
         # create the request
-        request_data = {'text': 'what is the weather'}
-        api_data, api_response = self.parse_response(
-            self.app.post(self.BRUTUS_API_REQUEST, data=request_data))
+        request_data = {'input': {'text': 'what is the weather'}}
+        api_data, api_response = self.parse_response(self.app.post(
+            self.BRUTUS_API_REQUEST,
+            data=json.dumps(request_data),
+            content_type='application/json'))
 
         # verify the request contains the input data
-        assert hasattr(api_data, 'input')
+        assert 'input' in api_data
         input_data = api_data['input']
 
         assert isinstance(input_data, dict)
-        assert input_data == request_data
+        assert input_data == request_data['input']
 
         # verify the request contains output data
-        assert hasattr(api_data, 'output')
+        assert 'output' in api_data
         output_data = api_data['output']
 
         assert isinstance(output_data, dict)
-        assert hasattr(output_data, 'text')
+        assert 'text' in output_data
         assert isinstance(output_data['text'], str)

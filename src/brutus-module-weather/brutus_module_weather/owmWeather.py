@@ -2,9 +2,9 @@ import pyowm
 import os
 
 
-def process_input(string):
+def process_input(api_key, string):
     cityid = 4509177
-    owm = pyowm.OWM(os.environ['OWMAPIKEY'])
+    owm = pyowm.OWM(api_key)
     obs = owm.weather_at_id(cityid)
     try:
         weather = obs.get_weather()

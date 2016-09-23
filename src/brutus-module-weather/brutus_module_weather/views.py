@@ -3,7 +3,6 @@ import itertools
 from flask import g, request, render_template, json
 
 from brutus_module_weather import app
-
 from brutus_module_weather import owmWeather
 
 
@@ -25,8 +24,11 @@ def create_request():
     data = request.get_json()
     input_data = data['input']
     contents = input_data['text']
+
     # 'what is the weather in columbus ohio'
-    resultstring = owmWeather.process_input(contents)
+    resultstring = owmWeather.process_input(
+        app.config['OPEN_WEATHER_MAP_API_KEY'],
+        contents)
 
     result = {'input': input_data, 'output': {'text': resultstring}}
     return json.jsonify(result)

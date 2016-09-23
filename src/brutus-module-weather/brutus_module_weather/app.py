@@ -10,4 +10,5 @@ app = Flask(__name__)
 
 app.config.update(
     DEBUG=os.getenv('DEBUG', 'False') in ['true', 'True'],
-    SECRET_KEY=os.getenv('SECRET_KEY', str(uuid.uuid4())))
+    SECRET_KEY=os.getenv('SECRET_KEY', str(uuid.uuid4())),
+    OPEN_WEATHER_MAP_API_KEY=os.getenv('OPEN_WEATHER_MAP_API_KEY'))
