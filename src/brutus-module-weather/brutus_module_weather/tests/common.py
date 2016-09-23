@@ -59,7 +59,7 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
                     }
                 ],
                 "base": "cmc stations",
-                "main":{
+                "main": {
                     "temp": 293.25,
                     "pressure": 1019,
                     "humidity": 83,
