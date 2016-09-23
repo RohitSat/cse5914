@@ -5,6 +5,6 @@ requests==2.11.1
 rq==0.6.0
 
 # testing
-pep8
-pytest
-HTTPretty
+pep8==1.7.0
+pytest==3.0.2
+responses==0.5.1
