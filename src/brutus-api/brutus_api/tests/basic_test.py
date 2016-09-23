@@ -1,5 +1,7 @@
 import unittest
 
+from flask import json
+
 from .common import BrutusTestCase
 
 
@@ -16,10 +18,15 @@ class BasicTestCase(BrutusTestCase):
         provided input data.
         """
 
+        # register module URLs with generic data
+        self.register_common_urls()
+
         # create the request
         request_data = {'text': 'what is 1 plus 1'}
-        create_data, create_response = self.parse_response(
-            self.app.post(self.BRUTUS_API_REQUEST, data=request_data))
+        create_data, create_response = self.parse_response(self.app.post(
+            self.BRUTUS_API_REQUEST,
+            data=json.dumps(request_data),
+            content_type='application/json'))
 
         # verify the request contains a numeric id
         assert hasattr(create_data, 'id')
@@ -56,12 +63,18 @@ class BasicTestCase(BrutusTestCase):
         Create multiple new requests and verify they all have unique IDs.
         """
 
+        # register module URLs with generic data
+        self.register_common_urls()
+
+        # create a few requests
         request_ids = set()
         for i in range(self.REQUEST_SAMPLE_SIZE):
             # create the request
             request_data = {'text': 'what is 1 plus 1'}
-            create_data, create_response = self.parse_response(
-                self.app.post(self.BRUTUS_API_REQUEST, data=request_data))
+            create_data, create_response = self.parse_response(self.app.post(
+                self.BRUTUS_API_REQUEST,
+                data=json.dumps(request_data),
+                content_type='application/json'))
 
             # keep track of the request id
             request_id = create_data['id']
