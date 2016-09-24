@@ -2,9 +2,9 @@ import pyowm
 import os
 
 
-def process_input(string):
+def process_input(api_key, string):
     cityid = 4509177
-    owm = pyowm.OWM(os.environ['OWMAPIKEY'])
+    owm = pyowm.OWM(api_key)
     obs = owm.weather_at_id(cityid)
     try:
         weather = obs.get_weather()
@@ -45,5 +45,5 @@ def get_temperature(weather):
     tempdict = weather.get_temperature(unit="fahrenheit")
     curtemp = tempdict['temp']
     resultstring = "The current temperature is "
-    resultsring = resultstring + str(curtemp) + " degrees fahrenheit."
+    resultstring = resultstring + str(curtemp) + " degrees fahrenheit."
     return resultstring

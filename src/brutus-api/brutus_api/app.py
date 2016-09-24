@@ -3,7 +3,7 @@ import sys
 import uuid
 import itertools
 
-from flask import Flask, g, request, render_template, json
+from flask import Flask, g
 from rq import Queue
 from rq.registry import StartedJobRegistry, FinishedJobRegistry
 from redis import Redis
@@ -26,9 +26,9 @@ app.config.update(
 
 # register event handlers
 @app.before_request
-def before_request():
+def connect_redis():
     """
-    Initialize the request context.
+    Connect to Redis and store the connection for reuse.
     """
 
     g.redis = Redis(

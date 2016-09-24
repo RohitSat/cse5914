@@ -12,7 +12,6 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
     """
 
     BRUTUS_API_REQUEST = '/api/request'
-    BRUTUS_API_REQUEST_BY_ID = '/api/request/{id}'
 
     def setUp(self):
         """
@@ -20,10 +19,11 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
         """
 
         # configure the application
-        brutus_module_math.app.config['TESTING'] = True
+        self.app = brutus_module_math.app
+        self.app.config['TESTING'] = True
 
         # create the test client
-        self.app = brutus_module_math.app.test_client()
+        self.client = self.app.test_client()
 
     def tearDown(self):
         """

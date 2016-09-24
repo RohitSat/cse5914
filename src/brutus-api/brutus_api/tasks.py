@@ -3,17 +3,15 @@ from rq import get_current_job
 
 from brutus_api import app
 from brutus_api import nlp
-import json
 import requests
+import json
 
 from watson_developer_cloud import AuthorizationV1
 
 # TODO move to database
 baseurl = "http://127.0.0.1:"
 moduleAddresses = {'math': '5010',
-                   'weather': '5020',
-                   'temperature': '5010',
-                   'conditions': '5010'}
+                   'weather': '5020'}
 
 
 def get_answer(text):
@@ -42,9 +40,16 @@ def get_answer(text):
         classifierName)
     # get the module name
     module = nlc.classify(text)
-
+    print(text)
+    print(module)
+    # get the result from the module
     url = baseurl + moduleAddresses[module] + "/api/request"
     print(url)
-    r = requests.post(url, json={'text': text})
-    # get the result from the module
-    return r.text.replace("\n", "")
+    r = requests.post(url, json={'input': {'text': text}})
+    print(r)
+    if(r.text is None):
+        error = 'I am sorry, an error occurred'
+        return {'text': error}
+    jsonResult = json.loads(r.text)
+    print(jsonResult)
+    return jsonResult['output']
