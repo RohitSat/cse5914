@@ -42,6 +42,7 @@ def create_request():
         # return requests and their status
         return json.jsonify([get_job_details(job) for job in jobs])
     data = request.get_json()
+    print(data)
     job = g.queue.enqueue(get_answer, data['text'])
     job.meta['input'] = data['text']
     job.save()

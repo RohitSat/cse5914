@@ -1,4 +1,4 @@
-const queryURL = 'http://brutus-215903.nitrousapp.com:8080/api/request/';
+const baseURL = 'http://localhost:5000';
 
 const textInput = document.querySelector('#textInput');
 const submitButton = document.querySelector('#submitButton');
@@ -65,15 +65,16 @@ const writeToBox = (text, box, time = 500) => {
  * @return {Promise}       promise returned from fetch
  */
 const postQuery = (query) => {
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+  console.log(headers.get('Content-Type'));
   const queryRequestSettings = {
-    body: JSON.stringify({
-      text: query,
-    }),
-    headers: new Headers({ 'Content-Type': 'application/json' }),
+    body: JSON.stringify({ text: query }),
+    headers: headers,
     method: 'post',
     mode: 'no-cors',
   };
-  fetch(queryURL, queryRequestSettings)
+  fetch(baseURL + '/api/request', queryRequestSettings)
     .then(res => {
       if (res.ok) {
         return res;
@@ -81,6 +82,10 @@ const postQuery = (query) => {
       throw new Error('Error with posting query');
     })
     .then(res => res.json())
+    .then(res => {
+      console.log(res);
+      return res;
+    })
     .then(obj => obj.id)
     .then(startPolling)
     .catch(console.log);
@@ -94,7 +99,7 @@ const postQuery = (query) => {
 const startPolling = (jobID) => {
   const timeout = 1000;
   const poll = () => {
-    fetch(queryURL)
+    fetch(`${baseURL}/api/${jobID}`)
       .then(res => {
         if (res.ok) return res;
         throw new Error('Error polling for response, id:', jobID)
