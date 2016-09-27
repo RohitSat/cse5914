@@ -4,6 +4,7 @@ import uuid
 import itertools
 
 from flask import Flask, g
+from flask_cors import CORS
 from rq import Queue
 from rq.registry import StartedJobRegistry, FinishedJobRegistry
 from redis import Redis
@@ -22,6 +23,10 @@ app.config.update(
     NLC_WATSON_USERNAME=os.getenv('NLC_WATSON_USERNAME'),
     NLC_WATSON_PASSWORD=os.getenv('NLC_WATSON_PASSWORD'),
     NLC_CLASSIFIER_NAME=os.getenv('BRUTUS_API_NLC_CLASSIFIER'))
+
+
+# enable CORS
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 
 # register event handlers
