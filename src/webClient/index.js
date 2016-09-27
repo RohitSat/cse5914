@@ -101,7 +101,7 @@ const startPolling = (jobID) => {
       })
       .then(res => res.json())
       .then(obj => {
-        if (obj.status === 'complete') {
+        if (obj.status === 'finished') {
           buttonStates.ready();
           writeToBox(obj.output.text, outputBox);
         } else if (obj.status === 'queued' || obj.status === 'started') {
