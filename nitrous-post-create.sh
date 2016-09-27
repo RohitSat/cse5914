@@ -4,6 +4,9 @@
 VENV="${HOME}/env"
 REPO="${HOME}/code/cse5914"
 
+# install ubuntu package tools
+sudo apt-get -y install software-properties-common
+
 # install redis
 sudo add-apt-repository -y ppa:chris-lea/redis-server
 sudo apt-get update
