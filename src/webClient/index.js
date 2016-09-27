@@ -1,27 +1,119 @@
+const baseURL = 'http://localhost:5000';
+
 const textInput = document.querySelector('#textInput');
 const submitButton = document.querySelector('#submitButton');
-
-const examples = {
-  'What\'s one plus one?': 'One plus one is two!',
-  'O-H': 'eye, oh',
-  'What\'s the weather like in New York City?': 'The weather in New York is sunny or something.',
-  'How many ounces in a gallon?': 'There are 128 fluid ounces in one gallon',
-  'Why is the sky blue?': 'Because I said so',
-}
-
+const outputBox = document.querySelector('.output');
+const buttonStates = {
+  ready: () => {
+    writeToBox('Submit a query', submitButton);
+    submitButton.className = "ready";
+  },
+  submitting: () => {
+    writeToBox('Submitting...', submitButton);
+    submitButton.className = "submitting";
+  },
+  processing: () => {
+    writeToBox('Processing...', submitButton);
+    submitButton.className = 'processing';
+  },
+};
+document.addEventListener('DOMContentLoaded', buttonStates.ready);
+/**
+ * "Says" a thing out loud using the speechSynthesis api
+ * @param  {string} thing thing to say out loud
+ */
 const sayThing = (thing) => {
   const synth = window.speechSynthesis;
   const utterance = new SpeechSynthesisUtterance(thing);
   const engVoice = synth.getVoices()[3];
   utterance.voice = engVoice;
   synth.speak(utterance);
-}
+};
 
 submitButton.addEventListener('click', (e) => {
-  // sayThing(textInput.value);
-  const response = examples[textInput.value] || 'I don\'t know how to answer that';
-  sayThing(response);
+  const val = textInput.value;
+  writeToBox('Processing: ' + val, outputBox);
+  submitButton.innerHTML = 'Sending Query...';
+  postQuery(val);
 });
 
-// For the demo
-Object.keys(examples).forEach(example => console.log(example));
+/**
+ * writes to a given dom node's innerhtml using a cool typing style.
+ * @param  {string} text       the output text to be rendered
+ * @param  {Number} [time=500] the total time the whole typing should take
+ */
+const writeToBox = (text, box, time = 500) => {
+  box.innerHTML = '';
+  const timeout = time / text.length;
+  let counter = 0;
+
+  const interval = setInterval(
+    () => {
+      if (counter++ > text.length) {
+        clearInterval(interval);
+      } else {
+        box.innerHTML = text.substring(0, counter);
+      }
+    },
+    timeout
+  );
+};
+
+/**
+ * Sends an HTTP post request to a hard-coded url entailing the query in its body
+ * @param  {string} query  user's query
+ * @return {Promise}       promise returned from fetch
+ */
+const postQuery = (query) => {
+  const queryRequestSettings = {
+    method: 'POST',
+    headers: new Headers({ 'Content-Type': 'application/json' }),
+    body: JSON.stringify({ text: query }),
+  };
+  fetch(baseURL + '/api/request', queryRequestSettings)
+    .then(res => {
+      if (res.ok) {
+        return res;
+      }
+      throw new Error('Error with posting query');
+    })
+    .then(res => res.json())
+    .then(obj => obj.id)
+    .then(startPolling)
+    .catch(console.log);
+};
+
+/**
+ * polls a hard-coded url with a give jobID
+ * @param  {string} jobID  id of the job to poll for
+ * @return {[type]}       [description]
+ */
+const startPolling = (jobID) => {
+  buttonStates.processing();
+  const timeout = 1000;
+  const poll = () => {
+    fetch(`${baseURL}/api/request/${jobID}`)
+      .then(res => {
+        if (res.ok) {
+          return res;
+        }
+        throw new Error('Error polling for response, id:', jobID);
+      })
+      .then(res => res.json())
+      .then(obj => {
+        if (obj.status === 'complete') {
+          buttonStates.ready();
+          writeToBox(obj.output.text, outputBox);
+        } else if (obj.status === 'queued' || obj.status === 'started') {
+          //buttonStates.processing();
+          setTimeout(poll(), timeout);
+        } else if (obj.status === 'failed') {
+          writeToBox('Request failed at processing stage', outputBox);
+          buttonStates.ready();
+        }
+      })
+      .catch(console.log);
+  };
+
+  const timeoutClear = setTimeout(poll(), timeout);
+}
