@@ -65,13 +65,9 @@ const writeToBox = (text, box, time = 500) => {
  * @return {Promise}       promise returned from fetch
  */
 const postQuery = (query) => {
-  const headers = new Headers();
-  headers.append('content-type', 'application/json');
-  console.log(headers.get('content-type'));
   const queryRequestSettings = {
     method: 'POST',
-    mode: 'no-cors',
-    headers: headers,
+    headers: new Headers({ 'Content-Type': 'application/json' }),
     body: JSON.stringify({ text: query }),
   };
   fetch(baseURL + '/api/request', queryRequestSettings)
@@ -101,8 +97,10 @@ const startPolling = (jobID) => {
   const poll = () => {
     fetch(`${baseURL}/api/${jobID}`)
       .then(res => {
-        if (res.ok) return res;
-        throw new Error('Error polling for response, id:', jobID)
+        if (res.ok) {
+          return res;
+        }
+        throw new Error('Error polling for response, id:', jobID);
       })
       .then(res => res.json())
       .then(obj => {
