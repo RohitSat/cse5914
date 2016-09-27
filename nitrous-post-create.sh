@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # settings
 VENV="${HOME}/env"
@@ -9,7 +9,6 @@ sudo apt-get -y install software-properties-common
 
 # install redis
 sudo add-apt-repository -y ppa:chris-lea/redis-server
-sudo apt-get update
 sudo apt-get -y install redis-server
 
 # create a virtualenv for the application
