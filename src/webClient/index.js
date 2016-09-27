@@ -32,13 +32,13 @@ const sayThing = (thing) => {
 
 submitButton.addEventListener('click', (e) => {
   const val = textInput.value;
-  writeToBox('Processing:' + val, outputBox);
+  writeToBox('Processing: ' + val, outputBox);
   submitButton.innerHTML = 'Sending Query...';
   postQuery(val);
 });
 
 /**
- * writes to div.output using a cool typing style.
+ * writes to a given dom node's innerhtml using a cool typing style.
  * @param  {string} text       the output text to be rendered
  * @param  {Number} [time=500] the total time the whole typing should take
  */
@@ -78,10 +78,6 @@ const postQuery = (query) => {
       throw new Error('Error with posting query');
     })
     .then(res => res.json())
-    .then(res => {
-      console.log(res);
-      return res;
-    })
     .then(obj => obj.id)
     .then(startPolling)
     .catch(console.log);
@@ -93,9 +89,10 @@ const postQuery = (query) => {
  * @return {[type]}       [description]
  */
 const startPolling = (jobID) => {
+  buttonStates.processing();
   const timeout = 1000;
   const poll = () => {
-    fetch(`${baseURL}/api/${jobID}`)
+    fetch(`${baseURL}/api/request/${jobID}`)
       .then(res => {
         if (res.ok) {
           return res;
@@ -105,9 +102,14 @@ const startPolling = (jobID) => {
       .then(res => res.json())
       .then(obj => {
         if (obj.status === 'complete') {
-          writeToOutputBox(obj.output.text);
-        } else if (obj.status === 'queued') {
+          buttonStates.ready();
+          writeToBox(obj.output.text, outputBox);
+        } else if (obj.status === 'queued' || obj.status === 'started') {
+          //buttonStates.processing();
           setTimeout(poll(), timeout);
+        } else if (obj.status === 'failed') {
+          writeToBox('Request failed at processing stage', outputBox);
+          buttonStates.ready();
         }
       })
       .catch(console.log);
