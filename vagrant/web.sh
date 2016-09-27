@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#install redis
+# install redis
 add-apt-repository -y ppa:chris-lea/redis-server
 apt-get update
 apt-get -y install redis-server
