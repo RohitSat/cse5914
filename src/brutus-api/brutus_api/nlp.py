@@ -37,4 +37,6 @@ class Nlp(object):
         for i in result['classes']:
             if(i['confidence'] > highestPercent):
                 module = i['class_name']
+        if highestPercent <= 0.9:
+            module = 'None'
         return module
