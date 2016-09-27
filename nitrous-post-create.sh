@@ -28,4 +28,4 @@ pip install -e "${REPO}/src/brutus-module-math"
 pip install -e "${REPO}/src/brutus-module-weather"
 
 # configure the vagrant user's profile
-echo "source ${REPO}/bin/activate" >> "${HOME}/.profile"
+echo "source ${VENV}/bin/activate" >> "${HOME}/.profile"
