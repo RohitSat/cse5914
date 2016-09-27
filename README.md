@@ -1,6 +1,7 @@
 # cse5914
 
 [![Build Status](https://travis-ci.org/RohitSat/cse5914.svg?branch=master)](https://travis-ci.org/RohitSat/cse5914)
+[![Nitrous Quickstart](https://nitrous-image-icons.s3.amazonaws.com/quickstart.svg)](https://www.nitrous.io/quickstart)
 
 ## Requirements
 
