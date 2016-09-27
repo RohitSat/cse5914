@@ -7,6 +7,19 @@ textarea {
   height: 300px;
 }
 
+.output {
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+  width: 500px;
+}
+
 button {
   display: block;
+  height: 50px;
+  width: 300px;
+  border-radius: 5px;
+}
+#submitButton.ready {
 }

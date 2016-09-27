@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # settings
 VENV="${HOME}/env"
@@ -9,11 +9,10 @@ sudo apt-get -y install software-properties-common
 
 # install redis
 sudo add-apt-repository -y ppa:chris-lea/redis-server
-sudo apt-get update
 sudo apt-get -y install redis-server
 
 # create a virtualenv for the application
-apt-get -y install python-virtualenv python3-dev
+sudo apt-get -y install python-virtualenv python3-dev
 virtualenv --python=/usr/bin/python3 "${VENV}"
 
 # install python requirements in the virtualenv
@@ -28,4 +27,4 @@ pip install -e "${REPO}/src/brutus-module-math"
 pip install -e "${REPO}/src/brutus-module-weather"
 
 # configure the vagrant user's profile
-echo "source ${REPO}/bin/activate" >> "${HOME}/.profile"
+echo "source ${VENV}/bin/activate" >> "${HOME}/.zprofile"
