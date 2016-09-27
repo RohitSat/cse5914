@@ -1,0 +1,8 @@
+{
+  "template": "python",
+  "ports": [5000, 5010, 5020],
+  "name": "cse5914",
+  "scripts": {
+    "Run tests": "make test"
+  }
+}
