@@ -66,13 +66,13 @@ const writeToBox = (text, box, time = 500) => {
  */
 const postQuery = (query) => {
   const headers = new Headers();
-  headers.append('Content-Type', 'application/json');
-  console.log(headers.get('Content-Type'));
+  headers.append('content-type', 'application/json');
+  console.log(headers.get('content-type'));
   const queryRequestSettings = {
-    body: JSON.stringify({ text: query }),
-    headers: headers,
-    method: 'post',
+    method: 'POST',
     mode: 'no-cors',
+    headers: headers,
+    body: JSON.stringify({ text: query }),
   };
   fetch(baseURL + '/api/request', queryRequestSettings)
     .then(res => {
