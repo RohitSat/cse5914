@@ -24,6 +24,16 @@ distclean:
 		cd $(TOP); )
 
 ##
+# development
+##
+
+run-%:
+	$(eval PROJECT := $(subst run,brutus,$@))
+	$(eval BINARY := $(subst -,_,$(PROJECT)))
+	$(eval CONFIG := $(TOP)/conf/$(PROJECT).sh)
+	[ -f "${CONFIG}" ] && source "${CONFIG}" ; $(BINARY)
+
+##
 # testing
 ##
 
