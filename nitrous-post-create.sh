@@ -13,7 +13,10 @@ sudo apt-get -y install redis-server
 
 # create a virtualenv for the application
 sudo apt-get -y install python-virtualenv python3-dev
+
+export LC_ALL=C
 virtualenv --python=/usr/bin/python3 "${VENV}"
+pip install --upgrade pip setuptools
 
 # install python requirements in the virtualenv
 source "${VENV}/bin/activate"
