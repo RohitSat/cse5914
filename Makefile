@@ -27,11 +27,11 @@ distclean:
 # development
 ##
 
-run-%:
+run-% run-%-%:
 	$(eval PROJECT := $(subst run,brutus,$@))
 	$(eval BINARY := $(subst -,_,$(PROJECT)))
 	$(eval CONFIG := $(TOP)/conf/$(PROJECT).sh)
-	[ -f "${CONFIG}" ] && source "${CONFIG}" ; $(BINARY)
+	[ -f "${CONFIG}" ] && . "${CONFIG}" ; $(BINARY)
 
 ##
 # testing
