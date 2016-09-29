@@ -30,5 +30,5 @@ pip install -e "${REPO}/src/brutus-api"
 pip install -e "${REPO}/src/brutus-module-math"
 pip install -e "${REPO}/src/brutus-module-weather"
 
-# configure the vagrant user's profile
+# configure the nitrous user's profile
 echo "source ${VENV}/bin/activate" >> "${HOME}/.zprofile"
