@@ -3,7 +3,7 @@
 # settings
 VENV="${HOME}/env"
 REPO="${HOME}/code/cse5914"
-PIP_OPTS="--ignore-installed --no-cache-dir"
+PIP_OPTS="--ignore-installed"
 
 # install ubuntu package tools
 sudo apt-get -y install software-properties-common
