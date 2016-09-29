@@ -31,7 +31,7 @@ run-% run-%-%:
 	$(eval PROJECT := $(subst run,brutus,$@))
 	$(eval BINARY := $(subst -,_,$(PROJECT)))
 	$(eval CONFIG := $(TOP)/conf/$(PROJECT).sh)
-	[ -f "${CONFIG}" ] && . "${CONFIG}" ; $(BINARY)
+	[ -f "${CONFIG}" ] && . "${CONFIG}" ; $(BINARY) --host 0.0.0.0
 
 ##
 # testing
