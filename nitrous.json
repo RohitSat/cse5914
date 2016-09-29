@@ -6,6 +6,6 @@
     "Start Brutus API": "brutus_api --host 0.0.0.0 --port 5000",
     "Start Brutus Math Module": "brutus_module_math --host 0.0.0.0 --port 5010",
     "Start Brutus Weather Module": "brutus_module_weather --host 0.0.0.0 --port 5020",
-    "Run tests": "make test"
+    "Run tests": "pushd $HOME/code/cse5914 ; make test ; popd"
   }
 }
