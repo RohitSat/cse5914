@@ -3,10 +3,10 @@
   "ports": [5000, 5010, 5020],
   "name": "cse5914",
   "scripts": {
-    "Start Brutus API": "make run-api",
+    "Start Brutus API": "cd $HOME/code/cse5914 ; make run-api",
     "Start Brutus API Worker": "source $HOME/code/cse5914/conf/brutus-api.sh ; rq worker",
-    "Start Brutus Math Module": "make run-module-math",
-    "Start Brutus Weather Module": "make run-module-weather",
+    "Start Brutus Math Module": "cd $HOME/code/cse5914 ; make run-module-math",
+    "Start Brutus Weather Module": "cd $HOME/code/cse5914 ; make run-module-weather",
     "Run tests": "pushd $HOME/code/cse5914 ; make test ; popd"
   }
 }
