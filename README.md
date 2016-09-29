@@ -70,5 +70,7 @@ make test        # run all tests
 
 * Python
   * PEP8 Style Guide: https://www.python.org/dev/peps/pep-0008/
+  * Python RQ: http://python-rq.org/docs/
   * Pytest: http://docs.pytest.org/en/latest/
+  * Responses: https://github.com/getsentry/responses
   * HTTTPretty: https://github.com/gabrielfalcao/HTTPretty
