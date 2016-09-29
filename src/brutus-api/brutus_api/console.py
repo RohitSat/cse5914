@@ -15,7 +15,7 @@ def main():
     # parse arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", default="127.0.0.1", help="listen host")
-    parser.add_argument("--port", type=int, default=5010, help="listen port")
+    parser.add_argument("--port", type=int, default=5000, help="listen port")
 
     args = parser.parse_args()
 
