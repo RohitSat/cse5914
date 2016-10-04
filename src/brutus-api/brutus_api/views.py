@@ -34,18 +34,21 @@ def create_request():
         job_ids = itertools.chain(
             g.started_registry.get_job_ids(),
             g.finished_registry.get_job_ids())
-        print(job_ids)
+
         jobs = itertools.chain(
             g.queue.get_jobs(),
             [g.queue.fetch_job(job_id) for job_id in job_ids])
-        print(jobs)
+
         # return requests and their status
         return json.jsonify([get_job_details(job) for job in jobs])
+
+    # create the job
     data = request.get_json()
-    print(data)
     job = g.queue.enqueue(get_answer, data['text'])
     job.meta['input'] = data['text']
     job.save()
+
+    # return the request information
     return json.jsonify(get_job_details(job))
 
 
@@ -54,5 +57,6 @@ def get_request(request_id):
     """
     Get a request.
     """
+
     job = g.queue.fetch_job(str(request_id))
     return json.jsonify(get_job_details(job))
