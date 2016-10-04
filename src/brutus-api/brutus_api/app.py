@@ -1,6 +1,7 @@
 import os
 import sys
 import uuid
+import sqlite3
 import itertools
 
 from flask import Flask, g
@@ -20,6 +21,7 @@ app.config.update(
     REDIS_HOST=os.getenv('REDIS_HOST', '127.0.0.1'),
     REDIS_PORT=int(os.getenv('REDIS_PORT', '6379')),
     REDIS_DB=int(os.getenv('REDIS_DB', '0')),
+    DATABASE=os.getenv('DATABASE', '/tmp/brutus.db'),
     NLC_WATSON_USERNAME=os.getenv('NLC_WATSON_USERNAME'),
     NLC_WATSON_PASSWORD=os.getenv('NLC_WATSON_PASSWORD'),
     NLC_CLASSIFIER_NAME=os.getenv('BRUTUS_API_NLC_CLASSIFIER'))
@@ -31,9 +33,41 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # register event handlers
 @app.before_request
+def connect_database():
+    """
+    Connect to the SQLite3 database and store the connection in the application
+    context.
+    """
+
+    # check if the database file already exists
+    db_file_present = not os.path.isfile(app.config['DATABASE'])
+
+    # connect to the database
+    g.db = sqlite3.connect(app.config['DATABASE'])
+
+    # initialize the schema if the database file did not already exist
+    if not db_file_present:
+        with app.open_resource('schema.sql', mode='r') as schema_file:
+            schema_sql = schema_file.read()
+            g.db.cursor().executescript(schema_sql)
+
+
+@app.teardown_appcontext
+def disconnect_database(exception):
+    """
+    Disconnect from the SQlite3 database if we're currently connected.
+    """
+
+    db = getattr(g, 'db', None)
+    if db is not None:
+        db.close()
+
+
+@app.before_request
 def connect_redis():
     """
-    Connect to Redis and store the connection for reuse.
+    Connect to Redis and store the connection for in the application
+    context.
     """
 
     g.redis = Redis(

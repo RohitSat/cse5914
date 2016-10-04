@@ -1,3 +1,7 @@
+# Database
+export DATABASE="/home/vagrant/brutus.db"
+
+# IBM BlueMix
 export NLC_WATSON_USERNAME="XXXXXXXXXXXXXXXXXXXX"
 export NLC_WATSON_PASSWORD="XXXXXXXXXXXXXXXXXXX"
 export BRUTUS_API_NLC_CLASSIFIER="brutus-api"
