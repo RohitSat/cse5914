@@ -26,7 +26,7 @@ class SimpleExpressionTestCase(BrutusTestCase):
                14: 'fourteen', 15: 'fifteen', 16: 'sixteen',
                17: 'seventeen', 18: 'eighteen', 19: 'ninteen',
                20: 'twenty', 30: 'thirty', 40: 'fourty',
-               50: 'fifty', 60: 'sixty six', 70: 'seventy',
+               50: 'fifty', 66: 'sixty six', 70: 'seventy',
                80: 'eighty', 90: 'ninty', 200: 'two hundred',
                100: 'a hundred', 1000: 'thousand',
                10000: 'ten thousand', 1000000: 'billion'}
