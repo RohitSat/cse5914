@@ -2,8 +2,8 @@ import itertools
 
 from flask import g, request, render_template, json, abort
 
-from brutus_api import app
-from brutus_api.tasks import get_answer
+from .app import app
+from .tasks import process_request
 
 from .database import query_db, insert_db
 
@@ -19,7 +19,7 @@ def format_request(data):
     request = {
         'id': data['id'],
         'status': "expired" if job is None else job.get_status(),
-        'module': module['name'],
+        'module': None if module is None else module['name'],
         'input': None,
         'output': None}
 
@@ -76,7 +76,7 @@ def requests():
     g.db.commit()
 
     # XXX
-    job = g.queue.enqueue(get_answer, request_id)
+    job = g.queue.enqueue(process_request, request_id)
 
     # XXX
     g.db.execute(

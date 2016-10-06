@@ -9,7 +9,7 @@ from .nlp import Nlp
 from .database import connect_db, query_db
 
 
-def get_answer(request_id):
+def process_request(request_id):
     """
     get the answer for a question asked by the user
         -find the module
