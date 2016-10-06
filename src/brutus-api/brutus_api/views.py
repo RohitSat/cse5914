@@ -10,9 +10,16 @@ from .database import query_db, insert_db
 
 def format_request(data):
     job = g.queue.fetch_job(str(data['job_id']))
+    module = query_db(
+        g.db,
+        'SELECT * FROM module WHERE id = ?',
+        (data['module_id'], ),
+        single=True)
+
     request = {
         'id': data['id'],
         'status': "expired" if job is None else job.get_status(),
+        'module': module['name'],
         'input': None,
         'output': None}
 
@@ -34,8 +41,18 @@ def index():
     return "Brutus API"
 
 
+@app.route('/api/module', methods=['GET'])
+def modules():
+    """
+    Get configured modules.
+    """
+
+    modules = map(dict, query_db(g.db, 'SELECT * FROM module'))
+    return json.jsonify(list(modules))
+
+
 @app.route('/api/request', methods=['GET', 'POST'])
-def create_request():
+def requests():
     """
     Get requests or create a new request.
     """
