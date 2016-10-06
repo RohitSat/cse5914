@@ -1,27 +1,27 @@
+// No framework makes for a sloppy js file :(
+
 const baseURL = 'http://cse5914-218011.nitrousapp.com:5000';
 
-
-
+// speech recognition
 var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
 var recognition = new SpeechRecognition();
 recognition.lang = 'en-US';
 recognition.interimResults = false;
 recognition.maxAlternatives = 1;
+
+// UI stuff
 const textInput = document.querySelector('#textInput');
 const submitButton = document.querySelector('#submitButton');
 const outputBox = document.querySelector('.output');
 const buttonStates = {
   ready: () => {
     writeToBox('Submit a query', submitButton);
-    submitButton.className = "ready";
   },
   submitting: () => {
     writeToBox('Submitting...', submitButton);
-    submitButton.className = "submitting";
   },
   processing: () => {
     writeToBox('Processing...', submitButton);
-    submitButton.className = 'processing';
   },
 };
 document.addEventListener('DOMContentLoaded', buttonStates.ready);
@@ -125,18 +125,21 @@ const startPolling = (jobID) => {
   const timeoutClear = setTimeout(poll(), timeout);
 }
 
-function startListening() {
-    recognition.start();
-    console.log('listening for input');
+const startListening = () => {
+  recognition.start();
+  console.log('listening...');
 }
+document.querySelector('#micButton').addEventListener('click', startListening);
 
 recognition.onresult = e => {
-    console.log(e);
-    console.log(e.results);
-    console.log(e.results[0][0].transcript);
+  const { confidence, transcript } = e.results[0][0];
+  console.log(`Speech was parsed to ${transcript} with confidence of ${confidence}`);
+  if (confidence > .3) {
+    writeToBox(transcript, textInput);
+  }
 };
 
 recognition.onspeechend = () => {
     recognition.stop();
-    console.log('no longer listening');
+    console.log('stopped listening');
 };
