@@ -10,9 +10,8 @@ __pycache__
 # python - pytest
 .cache
 
-# Virtualenv stuff
-env/
+# python - local development
+env
 
-
-#authentication info
-auth.json
+# configuration settings
+conf

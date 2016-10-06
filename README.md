@@ -55,6 +55,7 @@ Run the worker for background tasks:
 ```bash
 rq worker
 ```
+
 ## Tests
 
 Navigate to the project directory and run the tests using Make targets:

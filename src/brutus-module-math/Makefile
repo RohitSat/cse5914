@@ -32,7 +32,7 @@ distclean: clean
 test: test-style test-unit
 
 test-style: check-env
-	python setup.py egg_info
+	python setup.py egg_info > /dev/null
 	pep8 --show-source --ignore=E125 --count \
 		`cat $(PROJECT).egg-info/top_level.txt | xargs echo`
 

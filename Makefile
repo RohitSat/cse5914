@@ -11,15 +11,27 @@ PROJECTS := brutus-api brutus-module-math brutus-module-weather
 
 # clean generated files
 clean:
-	cd src/brutus-api && $(MAKE) clean
-	cd src/brutus-module-math && $(MAKE) clean
-	cd src/brutus-module-weather && $(MAKE) clean
+	@$(foreach project,$(PROJECTS), \
+		cd src/$(project); \
+		$(MAKE) clean; \
+		cd $(TOP); )
 
 # clean all development files
 distclean:
-	cd src/brutus-api && $(MAKE) distclean
-	cd src/brutus-module-math && $(MAKE) distclean
-	cd src/brutus-module-weather && $(MAKE) distclean
+	@$(foreach project,$(PROJECTS), \
+		cd src/$(project); \
+		$(MAKE) distclean; \
+		cd $(TOP); )
+
+##
+# development
+##
+
+run-% run-%-%:
+	$(eval PROJECT := $(subst run,brutus,$@))
+	$(eval BINARY := $(subst -,_,$(PROJECT)))
+	$(eval CONFIG := $(TOP)/conf/$(PROJECT).sh)
+	[ -f "${CONFIG}" ] && . "${CONFIG}" ; $(BINARY) --host 0.0.0.0
 
 ##
 # testing
@@ -30,11 +42,13 @@ distclean:
 test: test-style test-unit
 
 test-style:
-	cd src/brutus-api && $(MAKE) test-style
-	cd src/brutus-module-math && $(MAKE) test-style
-	cd src/brutus-module-weather && $(MAKE) test-style
+	@$(foreach project,$(PROJECTS), \
+		cd src/$(project); \
+		$(MAKE) test-style; \
+		cd $(TOP); )
 
 test-unit:
-	cd src/brutus-api && $(MAKE) test-unit
-	cd src/brutus-module-math && $(MAKE) test-unit
-	cd src/brutus-module-weather && $(MAKE) test-unit
+	@$(foreach project,$(PROJECTS), \
+		cd src/$(project); \
+		$(MAKE) test-unit; \
+		cd $(TOP); )
