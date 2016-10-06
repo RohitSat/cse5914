@@ -31,6 +31,10 @@ app.config.update(
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 
+# XXX
+from .database import get_db, init_db
+
+
 # register event handlers
 @app.before_request
 def connect_database():
@@ -43,13 +47,11 @@ def connect_database():
     db_file_present = not os.path.isfile(app.config['DATABASE'])
 
     # connect to the database
-    g.db = sqlite3.connect(app.config['DATABASE'])
+    g.db = get_db()
 
     # initialize the schema if the database file did not already exist
     if not db_file_present:
-        with app.open_resource('schema.sql', mode='r') as schema_file:
-            schema_sql = schema_file.read()
-            g.db.cursor().executescript(schema_sql)
+        init_db()
 
 
 @app.teardown_appcontext
