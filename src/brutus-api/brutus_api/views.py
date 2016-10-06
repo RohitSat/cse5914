@@ -5,16 +5,14 @@ from flask import g, request, render_template, json, abort
 from brutus_api import app
 from brutus_api.tasks import get_answer
 
-from .database import query_db
+from .database import query_db, insert_db
 
 
 def format_request(data):
     job = g.queue.fetch_job(str(data['job_id']))
     request = {
         'id': data['id'],
-        'job_id': data['job_id'],
-        'module_id': data['module_id'],
-        'status': None if job is None else job.get_status(),
+        'status': "expired" if job is None else job.get_status(),
         'input': None,
         'output': None}
 
@@ -44,7 +42,7 @@ def create_request():
 
     if request.method == 'GET':
         # retrieve all requests
-        requests = map(format_request, query_db('SELECT * FROM request'))
+        requests = map(format_request, query_db(g.db, 'SELECT * FROM request'))
 
         # return requests and their status
         return json.jsonify(list(requests))
@@ -53,19 +51,18 @@ def create_request():
     data = request.get_json()
 
     # store the request details in the database
-    cursor = g.db.cursor()
-    cursor.execute(
+    request_id = insert_db(
+        g.db,
         'INSERT INTO request (status, input) VALUES (?, ?)',
         ('created', data['text']))
 
     g.db.commit()
 
     # XXX
-    request_id = cursor.lastrowid
     job = g.queue.enqueue(get_answer, request_id)
 
     # XXX
-    cursor.execute(
+    g.db.execute(
         'UPDATE request SET job_id = ? WHERE id = ?',
         (job.id, request_id))
 

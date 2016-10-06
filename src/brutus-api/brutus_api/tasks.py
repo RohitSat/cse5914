@@ -6,6 +6,7 @@ from flask import json
 
 from .app import app
 from .nlp import Nlp
+from .database import connect_db, query_db
 
 
 def get_answer(request_id):
@@ -17,9 +18,7 @@ def get_answer(request_id):
     """
 
     # connect to the database
-    db = sqlite3.connect(app.config['DATABASE'])
-    db.row_factory = sqlite3.Row
-    cursor = db.cursor()
+    db = connect_db(app.config['DATABASE'])
 
     # get the current job
     redis = Redis(
@@ -30,12 +29,15 @@ def get_answer(request_id):
     job = get_current_job(connection=redis)
 
     # get the current request
-    cursor.execute('SELECT * FROM request WHERE id = ?', (request_id, ))
-    request = cursor.fetchone()
+    request = query_db(
+        db,
+        'SELECT * FROM request WHERE id = ?',
+        (request_id, ),
+        single=True)
 
     if request is None:
-        raise RuntimeError("request with ID {0} could not be found".format(
-            job.meta['request_id']))
+        raise RuntimeError("request {0} not found in the database".format(
+            request_id))
 
     # set up natural language processor object and pass it the classifier name
     nlc = Nlp(
@@ -59,7 +61,7 @@ def get_answer(request_id):
         output = {'text': 'An error occured processing your request.'}
 
     # XXX
-    cursor.execute(
+    db.execute(
         'UPDATE request SET output = ? WHERE id = ?',
         (output['text'], request_id))
 

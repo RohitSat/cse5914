@@ -10,6 +10,8 @@ from rq import Queue
 from rq.registry import StartedJobRegistry, FinishedJobRegistry
 from redis import Redis
 
+from .database import connect_db
+
 
 # create the flask application
 app = Flask(__name__)
@@ -31,10 +33,6 @@ app.config.update(
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 
-# XXX
-from .database import get_db, init_db
-
-
 # register event handlers
 @app.before_request
 def connect_database():
@@ -44,14 +42,11 @@ def connect_database():
     """
 
     # check if the database file already exists
-    db_file_present = not os.path.isfile(app.config['DATABASE'])
+    if not os.path.isfile(app.config['DATABASE']):
+        raise RuntimeError("database does not exist")
 
     # connect to the database
-    g.db = get_db()
-
-    # initialize the schema if the database file did not already exist
-    if not db_file_present:
-        init_db()
+    g.db = connect_db(app.config['DATABASE'])
 
 
 @app.teardown_appcontext
