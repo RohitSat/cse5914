@@ -23,8 +23,10 @@ class ComplexExpressionTestCase(BrutusTestCase):
                50: 'fifty', 66: 'sixty six', 70: 'seventy',
                100: 'a hundred', 1000: 'thousand'}
 
-    # test expressions with multiple operators
-    # ex : a + b * c / d
+    """
+    test expressions with multiple operators
+    ex : a + b * c / d
+    """
     def test_complexExpressions(self):
         # create combos for tests
         terms = self.addOperatorTerm(self.operators, self.numbers)
@@ -38,9 +40,11 @@ class ComplexExpressionTestCase(BrutusTestCase):
                 text = prefix + " " + text
                 answer = "{} is {}".format(sym, a)
                 print(text)
-                assert self.get_result(text) == answer
+                assert self.get_result(text) == answer, text
 
-    # add together terms for question
+    """
+    add together terms for question
+    """
     def addOperatorTerm(self, first, second):
         inputs = {}
         for fSym, fText in first.items():

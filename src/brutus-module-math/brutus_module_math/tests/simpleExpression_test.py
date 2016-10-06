@@ -40,8 +40,7 @@ class SimpleExpressionTestCase(BrutusTestCase):
                         a = n1Digit + n2Digit
                         text = self.create_question(prefix, n1Text, n2Text, op)
                         answer = self.create_answer(n1Digit, n2Digit, sym, a)
-                        print(text)
-                        assert self.get_result(text) == answer
+                        assert self.get_result(text) == answer, text
 
     def test_subtraction(self):
         sym = '-'
@@ -52,8 +51,7 @@ class SimpleExpressionTestCase(BrutusTestCase):
                         a = n1Digit - n2Digit
                         text = self.create_question(prefix, n1Text, n2Text, op)
                         answer = self.create_answer(n1Digit, n2Digit, sym, a)
-                        print(text)
-                        assert self.get_result(text) == answer
+                        assert self.get_result(text) == answer, text
 
     def test_subtractedFrom(self):
         sym = '-'
@@ -64,8 +62,7 @@ class SimpleExpressionTestCase(BrutusTestCase):
                     a = n1Digit - n2Digit
                     text = self.create_question(prefix, n1Text, n2Text, op)
                     answer = self.create_answer(n1Digit, n2Digit, sym, a)
-                    print(text)
-                    assert self.get_result(text) == answer
+                    assert self.get_result(text) == answer, text
 
     def test_multiplication(self):
         sym = '*'
@@ -76,8 +73,7 @@ class SimpleExpressionTestCase(BrutusTestCase):
                         a = n1Digit * n2Digit
                         text = self.create_question(prefix, n1Text, n2Text, op)
                         answer = self.create_answer(n1Digit, n2Digit, sym, a)
-                        print(text)
-                        assert self.get_result(text) == answer
+                        assert self.get_result(text) == answer, text
 
     def test_division(self):
         sym = '/'
@@ -91,8 +87,7 @@ class SimpleExpressionTestCase(BrutusTestCase):
                             a = " undefined "
                         text = self.create_question(prefix, n1Text, n2Text, op)
                         answer = self.create_answer(n1Digit, n2Digit, sym, a)
-                        print(text)
-                        assert self.get_result(text) == answer
+                        assert self.get_result(text) == answer, text
 
     def create_question(self, prefix, num1, num2, op):
         return "{} {} {} {}".format(prefix, num1, op, num2)
