@@ -40,6 +40,7 @@ class SimpleExpressionTestCase(BrutusTestCase):
                         a = n1Digit + n2Digit
                         text = self.create_question(prefix, n1Text, n2Text, op)
                         answer = self.create_answer(n1Digit, n2Digit, sym, a)
+                        print(text)
                         assert self.get_result(text) == answer
 
     def test_subtraction(self):
@@ -51,6 +52,7 @@ class SimpleExpressionTestCase(BrutusTestCase):
                         a = n1Digit - n2Digit
                         text = self.create_question(prefix, n1Text, n2Text, op)
                         answer = self.create_answer(n1Digit, n2Digit, sym, a)
+                        print(text)
                         assert self.get_result(text) == answer
 
     def test_subtractedFrom(self):
@@ -62,6 +64,7 @@ class SimpleExpressionTestCase(BrutusTestCase):
                     a = n1Digit - n2Digit
                     text = self.create_question(prefix, n1Text, n2Text, op)
                     answer = self.create_answer(n1Digit, n2Digit, sym, a)
+                    print(text)
                     assert self.get_result(text) == answer
 
     def test_multiplication(self):
@@ -73,6 +76,7 @@ class SimpleExpressionTestCase(BrutusTestCase):
                         a = n1Digit * n2Digit
                         text = self.create_question(prefix, n1Text, n2Text, op)
                         answer = self.create_answer(n1Digit, n2Digit, sym, a)
+                        print(text)
                         assert self.get_result(text) == answer
 
     def test_division(self):
@@ -87,6 +91,7 @@ class SimpleExpressionTestCase(BrutusTestCase):
                             a = " undefined "
                         text = self.create_question(prefix, n1Text, n2Text, op)
                         answer = self.create_answer(n1Digit, n2Digit, sym, a)
+                        print(text)
                         assert self.get_result(text) == answer
 
     def create_question(self, prefix, num1, num2, op):

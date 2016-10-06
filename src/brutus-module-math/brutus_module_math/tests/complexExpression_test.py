@@ -19,45 +19,34 @@ class ComplexExpressionTestCase(BrutusTestCase):
                  '*': '*', '*': 'times',
                  '/': '/', '/': 'over'}
     numbers = {1: '1', 22: '22', 6443: '6443', 32313: '32313',
-               22341454: '22341454', 12335345345342: '12335345345342',
-               0: 'zero', 1: 'one', 2: 'two', 10: 'ten',
                17: 'seventeen', 18: 'eighteen', 19: 'ninteen',
                50: 'fifty', 66: 'sixty six', 70: 'seventy',
                100: 'a hundred', 1000: 'thousand'}
 
     # test expressions with multiple operators
-    # ex : a + b * d
+    # ex : a + b * c / d
     def test_complexExpressions(self):
-        inputs = self.getNumberOperatorCombos()
-        cases = self.addOperatorTerm(self.numbers, inputs)
-        cases = self.addOperatorTerm(cases, inputs)
+        # create combos for tests
+        terms = self.addOperatorTerm(self.operators, self.numbers)
+        cases = self.addOperatorTerm(self.numbers, terms)
+        cases = self.addOperatorTerm(cases, terms)
+        cases = self.addOperatorTerm(cases, terms)
 
         for prefix in self.prefixes:
             for sym, text in cases.items():
                 a = eval(sym)
                 text = prefix + " " + text
                 answer = "{} is {}".format(sym, a)
+                print(text)
                 assert self.get_result(text) == answer
 
-    # create combinations of numbers and operators i
-    # to make creating questions easier
-    # ex : '+ 2'
-    def getNumberOperatorCombos(self):
+    # add together terms for question
+    def addOperatorTerm(self, first, second):
         inputs = {}
-        for nDigit, nText in self.numbers.items():
-            for opSym, opText in self.operators.items():
-                symRep = "{} {}".format(opSym, nDigit)
-                textRep = "{} {}".format(opText, nText)
-                inputs[symRep] = textRep
-
-        return inputs
-
-    def addOperatorTerm(self, original, termToAdd):
-        inputs = {}
-        for oSym, oText in original.items():
-            for nSym, nText in termToAdd.items():
-                symRep = "{} {}".format(oSym, nSym)
-                textRep = "{} {}".format(oText, nText)
+        for fSym, fText in first.items():
+            for sSym, sText in second.items():
+                symRep = "{} {}".format(fSym, sSym)
+                textRep = "{} {}".format(fText, sText)
                 inputs[symRep] = textRep
 
         return inputs
