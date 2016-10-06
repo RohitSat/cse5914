@@ -42,3 +42,14 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
         assert response.content_type == 'application/json'
 
         return json.loads(response.get_data()), response
+
+    def get_result(self, question):
+        # create the request
+        request_data = {'input': {'text': question}}
+        api_data, api_response = self.parse_response(self.client.post(
+            self.BRUTUS_API_REQUEST,
+            data=json.dumps(request_data),
+            content_type='application/json'))
+
+        output_data = api_data['output']
+        return output_data['text']
