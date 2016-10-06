@@ -38,6 +38,13 @@ def process_request(request_id):
     if request is None:
         raise RuntimeError("request {0} not found".format(request_id))
 
+    # XXX
+    db.execute(
+        'UPDATE request SET status = \'started\' WHERE id = ?',
+        (request_id, ))
+
+    db.commit()
+
     # set up natural language processor object and pass it the classifier name
     nlc = Nlp(
         app.config['NLC_WATSON_USERNAME'],
@@ -76,7 +83,7 @@ def process_request(request_id):
 
     # XXX
     db.execute(
-        'UPDATE request SET output = ? WHERE id = ?',
+        'UPDATE request SET status = \'finished\', output = ? WHERE id = ?',
         (output['text'], request_id))
 
     db.commit()

@@ -9,7 +9,6 @@ from .database import query_db, insert_db
 
 
 def format_request(data):
-    job = g.queue.fetch_job(str(data['job_id']))
     module = query_db(
         g.db,
         'SELECT * FROM module WHERE id = ?',
@@ -18,7 +17,7 @@ def format_request(data):
 
     request = {
         'id': data['id'],
-        'status': "expired" if job is None else job.get_status(),
+        'status': data['status'],
         'module': None if module is None else module['name'],
         'input': None,
         'output': None}
@@ -80,7 +79,7 @@ def requests():
 
     # XXX
     g.db.execute(
-        'UPDATE request SET job_id = ? WHERE id = ?',
+        'UPDATE request SET status = \'queued\', job_id = ? WHERE id = ?',
         (job.id, request_id))
 
     g.db.commit()
