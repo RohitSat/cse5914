@@ -38,20 +38,19 @@ def process_request(request_id):
     if request is None:
         raise RuntimeError("request {0} not found".format(request_id))
 
-    # XXX
+    # update the request status
     db.execute(
         'UPDATE request SET status = \'started\' WHERE id = ?',
         (request_id, ))
 
     db.commit()
 
-    # set up natural language processor object and pass it the classifier name
+    # classify the module using the natural language classifier
     nlc = Nlp(
         app.config['NLC_WATSON_USERNAME'],
         app.config['NLC_WATSON_PASSWORD'],
         app.config['NLC_CLASSIFIER_NAME'])
 
-    # XXX get the module
     module_name = nlc.classify(request['input'])
     module = query_db(
         db,
@@ -62,7 +61,7 @@ def process_request(request_id):
     if module is None:
         raise RuntimeError("module {0} not found".format(module_name))
 
-    # XXX
+    # update the request module
     db.execute(
         'UPDATE request SET module_id = ? WHERE id = ?',
         (module['id'], request_id))
@@ -81,7 +80,7 @@ def process_request(request_id):
     else:
         output = {'text': 'An error occured processing your request.'}
 
-    # XXX
+    # update the request
     db.execute(
         'UPDATE request SET status = \'finished\', output = ? WHERE id = ?',
         (output['text'], request_id))
