@@ -15,11 +15,12 @@ textarea {
   width: 500px;
 }
 
-button {
-  display: block;
-  height: 50px;
-  width: 300px;
-  border-radius: 5px;
+div.buttonsContainer {
+  width: 500px;
+  display: flex;
+  justify-content: space-around;
 }
-#submitButton.ready {
+
+div.buttonsContainer button {
+  flex: 0 1 200px;
 }
