@@ -12,6 +12,7 @@ recognition.maxAlternatives = 1;
 // UI stuff
 const textInput = document.querySelector('#textInput');
 const submitButton = document.querySelector('#submitButton');
+const micButton = document.querySelector('#micButton');
 const outputBox = document.querySelector('.output');
 const buttonStates = {
   ready: () => {
@@ -125,11 +126,14 @@ const startPolling = (jobID) => {
   const timeoutClear = setTimeout(poll(), timeout);
 }
 
-const startListening = () => {
+const startListening = (e) => {
+  e.target.removeEventListener(e.type, startListening);
   recognition.start();
   console.log('listening...');
+  micButton.style.backgroundColor = 'red';
+  micButton.innerHTML = 'Listening';
 }
-document.querySelector('#micButton').addEventListener('click', startListening);
+micButton.addEventListener('click', startListening);
 
 recognition.onresult = e => {
   const { confidence, transcript } = e.results[0][0];
@@ -140,6 +144,9 @@ recognition.onresult = e => {
 };
 
 recognition.onspeechend = () => {
-    recognition.stop();
-    console.log('stopped listening');
+  recognition.stop();
+  console.log('stopped listening');
+  micButton.style.backgroundColor = '';
+  micButton.addEventListener('click', startListening);
+  micButton.innerHTML = 'Mic';
 };
