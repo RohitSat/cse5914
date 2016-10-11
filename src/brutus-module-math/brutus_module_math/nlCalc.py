@@ -44,7 +44,7 @@ def calculate(string):
     string = fixSpecialCases(string)
     string = convertToNumbers(string)
     string = convertToSymbols(string)
-    string = fixNegatives(string)
+    #string = fixNegatives(string)
     string = stripWords(string)
     result = evaluate(string)
     resultstring = string + ' is ' + str(result)
@@ -66,15 +66,14 @@ def aFollowedByScale(string):
 
     return ' '.join(strarr)
 
+"""
 def fixNegatives(string):
     strarr=string.split()
     newarr=[]
     for word in strarr:
-        if word =="negative":
-                
-        
+        #if word =="negative":
+"""
     
-
 def removePunctuation(string):
     #removes punctuation other than .
     punctuationToRemove = ['?', ',' , '"', "!", "'"]
@@ -183,10 +182,7 @@ def stripWords(string):
 def evaluate(string):
     return eval(string)
 
-import sys
-string=sys.argv[1]
-convertedstring=calculate(string)
-print convertedstring
-
-
-
+#import sys
+#string=sys.argv[1]
+#convertedstring=calculate(string)
+#print convertedstring
