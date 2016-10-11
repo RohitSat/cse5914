@@ -42,11 +42,18 @@ def connect_database():
     """
 
     # check if the database file already exists
-    if not os.path.isfile(app.config['DATABASE']):
-        raise RuntimeError("database does not exist")
+    database_file_exists = os.path.isfile(app.config['DATABASE'])
 
     # connect to the database
     g.db = connect_db(app.config['DATABASE'])
+
+    # initialize the database if the file did not exist
+    if not database_file_exists:
+        with app.open_resource('schema.sql', 'r') as schema_file:
+            schema_sql = schema_file.read()
+
+        g.db.executescript(schema_sql)
+        g.db.commit()
 
 
 @app.teardown_appcontext

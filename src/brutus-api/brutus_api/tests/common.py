@@ -1,4 +1,6 @@
+import os
 import unittest
+import tempfile
 from abc import ABCMeta
 
 import redis
@@ -9,6 +11,7 @@ from rq.registry import StartedJobRegistry, FinishedJobRegistry
 from watson_developer_cloud import NaturalLanguageClassifierV1, AuthorizationV1
 
 import brutus_api
+from buruts_api.database import connect_db
 
 
 class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
@@ -27,9 +30,19 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
         # configure the application
         self.app = brutus_api.app
         self.app.config['TESTING'] = True   # pass errors to test client
-        self.app.config['REDIS_DB'] = 1     # test database
+        self.app.config['REDIS_DB'] = 1     # test redis database
+        self.app.config['DATABASE'] = tempfile.mkstemp() # test database
+
         self.app.config['NLC_WATSON_USERNAME'] = 'error_if_not_present'
         self.app.config['NLC_WATSON_PASSWORD'] = 'error_if_not_present'
+
+        # connect to and initialize the database
+        self.db = connect_db(self.app.config['DATABASE'])
+        with self.app.open_resource('schema.sql', 'r') as schema_file:
+            schema_sql = schema_file.readall()
+
+        self.db.executescript(schema_sql)
+        self.db.commit()
 
         # create a redis connection pool
         self.redis_pool = redis.ConnectionPool(
@@ -57,6 +70,10 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
 
         # delete all data from redis
         self.redis.flushall()
+
+        # disconnect from and delete the database
+        self.db.close()
+        os.remove(self.app.config['DATABASE'])
 
         # disable requests module patch
         responses.stop()
