@@ -90,7 +90,7 @@ def requests():
         'job_id': job.id,
         'module_id': None,
         'status': job.get_status(),
-        'input': {'text': data['text']},
+        'input': {'text': input_data['text']},
         'output': None})
 
 
@@ -101,7 +101,12 @@ def get_request(req_id):
     """
 
     # retrieve the request
-    request = query_db('SELECT * FROM request WHERE id = ?', [req_id], True)
+    request = query_db(
+        g.db,
+        'SELECT * FROM request WHERE id = ?',
+        (req_id, ),
+        single=True)
+
     if request is None:
         # request not found
         abort(404)
