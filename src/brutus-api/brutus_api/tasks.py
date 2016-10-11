@@ -2,7 +2,7 @@ from redis import Redis
 from rq import get_current_job
 
 from brutus_api import app
-from brutus_api import nlp
+from brutus_api import nlc
 import requests
 import json
 
@@ -33,13 +33,13 @@ def get_answer(text):
     username = app.config['NLC_WATSON_USERNAME']
     password = app.config['NLC_WATSON_PASSWORD']
     classifierName = app.config['NLC_CLASSIFIER_NAME']
-    # set up natural language processor object and pass it the classifier name
-    nlc = nlp.Nlp(
+    # set up natural language classifier object and pass it the classifier name
+    naturalLangClassifier = nlc.Nlc(
         username,
         password,
         classifierName)
     # get the module name
-    module = nlc.classify(text)
+    module = naturalLangClassifier.classify(text)
     print(text)
     print(module)
     # get the result from the module
