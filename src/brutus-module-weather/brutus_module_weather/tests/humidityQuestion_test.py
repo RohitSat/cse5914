@@ -20,12 +20,11 @@ class HumidityTestCase(BrutusTestCase):
         """
         Ask a humid question and make sure the answer is humid related
         """
+
         # register open weather map URLs with generic data
-        temp = 300
         humidity = 10
-        wind = 10
-        cloud = 45
-        self.register_open_weather_map_urls(temp, humidity, wind, cloud)
+        self.register_open_weather_map_urls(
+            temp=300, humidity=humidity, wind=10, clouds=45)
 
         for question in self.humidQuestions:
             answer = self.humidityAnswer(humidity)

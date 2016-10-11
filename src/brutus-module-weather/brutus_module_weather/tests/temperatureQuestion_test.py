@@ -21,13 +21,13 @@ class TempuratureTestCase(BrutusTestCase):
         Ask a temperature question and
          make sure the answer is temperature related
         """
+
         # register open weather map URLs with generic data
         temp = 300
         fahrenheit = 80.33
-        humidity = 10
-        wind = 10
-        cloud = 45
-        self.register_open_weather_map_urls(temp, humidity, wind, cloud)
+
+        self.register_open_weather_map_urls(
+            temp=temp, humidity=10, wind=10, clouds=45)
 
         for question in self.questions:
             answer = self.temperatureAnswer(fahrenheit)

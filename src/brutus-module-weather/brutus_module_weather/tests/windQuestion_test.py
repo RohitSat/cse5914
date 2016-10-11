@@ -23,11 +23,9 @@ class WindTestCase(BrutusTestCase):
         """
 
         # register open weather map URLs with generic data
-        temp = 300
-        humidity = 10
         wind = 10
-        cloud = 45
-        self.register_open_weather_map_urls(temp, humidity, wind, cloud)
+        self.register_open_weather_map_urls(
+            temp=300, humidity=10, wind=wind, clouds=45)
 
         for question in self.windQuestions:
             answer = self.windAnswer(wind)
