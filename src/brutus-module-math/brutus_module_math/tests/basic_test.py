@@ -8,6 +8,7 @@ from .common import BrutusTestCase
 class BasicTestCase(BrutusTestCase):
     """
     A basic test case for creating and retrieving requests.
+    Ensure the json returned is formatted correctly
     """
 
     def test_create_request(self):
