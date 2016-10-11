@@ -11,7 +11,7 @@ from rq.registry import StartedJobRegistry, FinishedJobRegistry
 from watson_developer_cloud import NaturalLanguageClassifierV1, AuthorizationV1
 
 import brutus_api
-from buruts_api.database import connect_db
+from brutus_api.database import connect_db, insert_db
 
 
 class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
@@ -31,7 +31,9 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
         self.app = brutus_api.app
         self.app.config['TESTING'] = True   # pass errors to test client
         self.app.config['REDIS_DB'] = 1     # test redis database
-        self.app.config['DATABASE'] = tempfile.mkstemp() # test database
+
+        database_file, database_filename = tempfile.mkstemp()
+        self.app.config['DATABASE'] = database_filename
 
         self.app.config['NLC_WATSON_USERNAME'] = 'error_if_not_present'
         self.app.config['NLC_WATSON_PASSWORD'] = 'error_if_not_present'
@@ -39,7 +41,7 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
         # connect to and initialize the database
         self.db = connect_db(self.app.config['DATABASE'])
         with self.app.open_resource('schema.sql', 'r') as schema_file:
-            schema_sql = schema_file.readall()
+            schema_sql = schema_file.read()
 
         self.db.executescript(schema_sql)
         self.db.commit()
@@ -94,6 +96,26 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
 
             # process jobs
             worker.work(burst=True)
+
+    def init_backend_modules(self):
+        """
+        Initialize common modules in the backend database.
+        """
+
+        # math module
+        insert_db(
+            self.db,
+            'INSERT INTO module (name, url) VALUES (?, ?)',
+            ('math', 'http://127.0.0.1:5010'))
+
+        # weather module
+        insert_db(
+            self.db,
+            'INSERT INTO module (name, url) VALUES (?, ?)',
+            ('weather', 'http://127.0.0.1:5020'))
+
+        # commit changes
+        self.db.commit()
 
     def register_common_urls(self):
         """

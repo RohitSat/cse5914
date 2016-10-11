@@ -19,6 +19,7 @@ class BasicTestCase(BrutusTestCase):
         """
 
         # register module URLs with generic data
+        self.init_backend_modules()
         self.register_common_urls()
 
         # create the request
@@ -32,7 +33,7 @@ class BasicTestCase(BrutusTestCase):
         assert 'id' in create_data
         request_id = create_data['id']
 
-        assert isinstance(request_id, str)
+        assert isinstance(request_id, int)
 
         # verify the request contains the input data
         assert 'input' in create_data
@@ -49,7 +50,7 @@ class BasicTestCase(BrutusTestCase):
         assert 'id' in create_data
         request_id = retrieve_data['id']
 
-        assert isinstance(request_id, str)
+        assert isinstance(request_id, int)
 
         # verify the request contains the input data
         assert 'input' in create_data
@@ -64,6 +65,7 @@ class BasicTestCase(BrutusTestCase):
         """
 
         # register module URLs with generic data
+        self.init_backend_modules()
         self.register_common_urls()
 
         # create a few requests
@@ -89,6 +91,7 @@ class BasicTestCase(BrutusTestCase):
         """
 
         # register module URLs with generic data
+        self.init_backend_modules()
         self.register_common_urls()
 
         # create the request
@@ -111,4 +114,5 @@ class BasicTestCase(BrutusTestCase):
             'id': request_id,
             'input': request_data,
             'output': {'text': '2'},
+            'module': 'math',
             'status': 'finished'}
