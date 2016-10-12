@@ -1,17 +1,40 @@
 import itertools
 
-from flask import g, request, render_template, json
+from flask import g, request, render_template, json, abort
 
-from brutus_api import app
-from brutus_api.tasks import get_answer
+from .app import app
+from .tasks import process_request
+
+from .database import query_db, insert_db
 
 
-def get_job_details(job):
-    return {
-        'id': job.id,
-        'status': job.get_status(),
-        'input': {'text': job.meta['input']},
-        'output': job.result}
+def format_request(data):
+    """
+    Convert raw request data into the format exposed by the API.
+    """
+
+    # retrieve the request module
+    module = query_db(
+        g.db,
+        'SELECT * FROM module WHERE id = ?',
+        (data['module_id'], ),
+        single=True)
+
+    # format the request data
+    request = {
+        'id': data['id'],
+        'status': data['status'],
+        'module': None if module is None else module['name'],
+        'input': None,
+        'output': None}
+
+    if data['input'] is not None:
+        request['input'] = {'text': data['input']}
+
+    if data['output'] is not None:
+        request['output'] = {'text': data['output']}
+
+    return request
 
 
 @app.route('/')
@@ -23,36 +46,70 @@ def index():
     return "Brutus API"
 
 
+@app.route('/api/module', methods=['GET'])
+def modules():
+    """
+    Get configured modules.
+    """
+
+    modules = map(dict, query_db(g.db, 'SELECT * FROM module'))
+    return json.jsonify(list(modules))
+
+
 @app.route('/api/request', methods=['GET', 'POST'])
-def create_request():
+def requests():
     """
     Get requests or create a new request.
     """
 
     if request.method == 'GET':
-        # retrieve started, queued, and finished jobs
-        job_ids = itertools.chain(
-            g.started_registry.get_job_ids(),
-            g.finished_registry.get_job_ids())
-        print(job_ids)
-        jobs = itertools.chain(
-            g.queue.get_jobs(),
-            [g.queue.fetch_job(job_id) for job_id in job_ids])
-        print(jobs)
-        # return requests and their status
-        return json.jsonify([get_job_details(job) for job in jobs])
-    data = request.get_json()
-    print(data)
-    job = g.queue.enqueue(get_answer, data['text'])
-    job.meta['input'] = data['text']
-    job.save()
-    return json.jsonify(get_job_details(job))
+        # retrieve all requests
+        requests = map(format_request, query_db(g.db, 'SELECT * FROM request'))
+        return json.jsonify(list(requests))
+
+    # create the request in the database
+    input_data = request.get_json()
+    request_id = insert_db(
+        g.db,
+        'INSERT INTO request (status, input) VALUES (?, ?)',
+        ('created', input_data['text']))
+
+    g.db.commit()
+
+    # create the background job and update the request
+    job = g.queue.enqueue(process_request, request_id)
+    g.db.execute(
+        'UPDATE request SET status = \'queued\', job_id = ? WHERE id = ?',
+        (job.id, request_id))
+
+    g.db.commit()
+
+    # return the initial request data
+    return json.jsonify({
+        'id': request_id,
+        'job_id': job.id,
+        'module_id': None,
+        'status': job.get_status(),
+        'input': {'text': input_data['text']},
+        'output': None})
 
 
-@app.route('/api/request/<uuid:request_id>')
-def get_request(request_id):
+@app.route('/api/request/<int:req_id>')
+def get_request(req_id):
     """
     Get a request.
     """
-    job = g.queue.fetch_job(str(request_id))
-    return json.jsonify(get_job_details(job))
+
+    # retrieve the request
+    request = query_db(
+        g.db,
+        'SELECT * FROM request WHERE id = ?',
+        (req_id, ),
+        single=True)
+
+    if request is None:
+        # request not found
+        abort(404)
+
+    # return the request data
+    return json.jsonify(format_request(request))

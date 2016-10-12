@@ -1,4 +1,6 @@
+import os
 import unittest
+import tempfile
 from abc import ABCMeta
 
 import redis
@@ -9,6 +11,7 @@ from rq.registry import StartedJobRegistry, FinishedJobRegistry
 from watson_developer_cloud import NaturalLanguageClassifierV1, AuthorizationV1
 
 import brutus_api
+from brutus_api.database import connect_db, insert_db
 
 
 class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
@@ -27,9 +30,21 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
         # configure the application
         self.app = brutus_api.app
         self.app.config['TESTING'] = True   # pass errors to test client
-        self.app.config['REDIS_DB'] = 1     # test database
+        self.app.config['REDIS_DB'] = 1     # test redis database
+
+        database_file, database_filename = tempfile.mkstemp()
+        self.app.config['DATABASE'] = database_filename
+
         self.app.config['NLC_WATSON_USERNAME'] = 'error_if_not_present'
         self.app.config['NLC_WATSON_PASSWORD'] = 'error_if_not_present'
+
+        # connect to and initialize the database
+        self.db = connect_db(self.app.config['DATABASE'])
+        with self.app.open_resource('schema.sql', 'r') as schema_file:
+            schema_sql = schema_file.read()
+
+        self.db.executescript(schema_sql)
+        self.db.commit()
 
         # create a redis connection pool
         self.redis_pool = redis.ConnectionPool(
@@ -58,6 +73,10 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
         # delete all data from redis
         self.redis.flushall()
 
+        # disconnect from and delete the database
+        self.db.close()
+        os.remove(self.app.config['DATABASE'])
+
         # disable requests module patch
         responses.stop()
         responses.reset()
@@ -77,6 +96,26 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
 
             # process jobs
             worker.work(burst=True)
+
+    def init_backend_modules(self):
+        """
+        Initialize common modules in the backend database.
+        """
+
+        # math module
+        insert_db(
+            self.db,
+            'INSERT INTO module (name, url) VALUES (?, ?)',
+            ('math', 'http://127.0.0.1:5010'))
+
+        # weather module
+        insert_db(
+            self.db,
+            'INSERT INTO module (name, url) VALUES (?, ?)',
+            ('weather', 'http://127.0.0.1:5020'))
+
+        # commit changes
+        self.db.commit()
 
     def register_common_urls(self):
         """

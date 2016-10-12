@@ -17,7 +17,11 @@ class BasicTestCase(BrutusTestCase):
         """
 
         # register open weather map URLs with generic data
-        self.register_open_weather_map_urls()
+        temp = 300
+        humidity = 10
+        wind = 10
+        cloud = 45
+        self.register_open_weather_map_urls(temp, humidity, wind, cloud)
 
         # create the request
         request_data = {'input': {'text': 'what is the weather'}}

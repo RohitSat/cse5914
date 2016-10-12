@@ -1,26 +1,24 @@
+import sqlite3
+import requests
 from redis import Redis
 from rq import get_current_job
+from flask import json
 
-from brutus_api import app
-from brutus_api import nlc
-import requests
-import json
-
-from watson_developer_cloud import AuthorizationV1
-
-# TODO move to database
-baseurl = "http://127.0.0.1:"
-moduleAddresses = {'math': '5010',
-                   'weather': '5020'}
+from .app import app
+from .nlc import Nlc
+from .database import connect_db, query_db
 
 
-def get_answer(text):
+def process_request(request_id):
     """
     get the answer for a question asked by the user
         -find the module
         -wait for the module to respond
         -set the result
     """
+
+    # connect to the database
+    db = connect_db(app.config['DATABASE'])
 
     # get the current job
     redis = Redis(
@@ -29,27 +27,62 @@ def get_answer(text):
         db=app.config['REDIS_DB'])
 
     job = get_current_job(connection=redis)
-    # get the watson username and password
-    username = app.config['NLC_WATSON_USERNAME']
-    password = app.config['NLC_WATSON_PASSWORD']
-    classifierName = app.config['NLC_CLASSIFIER_NAME']
-    # set up natural language classifier object and pass it the classifier name
-    naturalLangClassifier = nlc.Nlc(
-        username,
-        password,
-        classifierName)
-    # get the module name
-    module = naturalLangClassifier.classify(text)
-    print(text)
-    print(module)
-    # get the result from the module
-    url = baseurl + moduleAddresses[module] + "/api/request"
-    print(url)
-    r = requests.post(url, json={'input': {'text': text}})
-    print(r)
-    if(r.text is None):
-        error = 'I am sorry, an error occurred'
-        return {'text': error}
-    jsonResult = json.loads(r.text)
-    print(jsonResult)
-    return jsonResult['output']
+
+    # get the current request
+    request = query_db(
+        db,
+        'SELECT * FROM request WHERE id = ?',
+        (request_id, ),
+        single=True)
+
+    if request is None:
+        raise RuntimeError("request {0} not found".format(request_id))
+
+    # update the request status
+    db.execute(
+        'UPDATE request SET status = \'started\' WHERE id = ?',
+        (request_id, ))
+
+    db.commit()
+
+    # classify the module using the natural language classifier
+    nlc = Nlc(
+        app.config['NLC_WATSON_USERNAME'],
+        app.config['NLC_WATSON_PASSWORD'],
+        app.config['NLC_CLASSIFIER_NAME'])
+
+    module_name = nlc.classify(request['input'])
+    module = query_db(
+        db,
+        'SELECT * FROM module WHERE name = ?',
+        (module_name, ),
+        single=True)
+
+    if module is None:
+        raise RuntimeError("module {0} not found".format(module_name))
+
+    # update the request module
+    db.execute(
+        'UPDATE request SET module_id = ? WHERE id = ?',
+        (module['id'], request_id))
+
+    db.commit()
+
+    # query the module
+    r = requests.post(
+        "{0}/api/request".format(module['url']),
+        json={'input': {'text': request['input']}})
+
+    if r.text is not None:
+        result = json.loads(r.text)
+        output = result['output']
+
+    else:
+        output = {'text': 'An error occured processing your request.'}
+
+    # update the request
+    db.execute(
+        'UPDATE request SET status = \'finished\', output = ? WHERE id = ?',
+        (output['text'], request_id))
+
+    db.commit()

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# install the sqlite3 command line utility
+apt-get -y install sqlite3
+
 # install redis
 add-apt-repository -y ppa:chris-lea/redis-server
 apt-get update
