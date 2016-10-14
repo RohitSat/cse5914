@@ -5,7 +5,7 @@ from rq import get_current_job
 from flask import json
 
 from .app import app
-from .nlp import Nlp
+from .nlc import Nlc
 from .database import connect_db, query_db
 
 
@@ -46,7 +46,7 @@ def process_request(request_id):
     db.commit()
 
     # classify the module using the natural language classifier
-    nlc = Nlp(
+    nlc = Nlc(
         app.config['NLC_WATSON_USERNAME'],
         app.config['NLC_WATSON_PASSWORD'],
         app.config['NLC_CLASSIFIER_NAME'])

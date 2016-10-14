@@ -7,7 +7,7 @@ from watson_developer_cloud import NaturalLanguageClassifierV1
 # TODO put this somewhere that it can be used by other modules if needed
 
 
-class Nlp(object):
+class Nlc(object):
 
     classifierId = None
     nlc = None
