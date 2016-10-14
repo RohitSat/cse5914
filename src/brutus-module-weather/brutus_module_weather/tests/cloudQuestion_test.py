@@ -13,9 +13,9 @@ class CloudTestCase(BrutusTestCase):
     """
 
     cloudQuestions = ['Is it cloudy',
-                      'Are there a lot of clouds'
-                      'How many clouds are there'
-                      'hOW MANY CLOUDS ARE THere'
+                      'Are there a lot of clouds',
+                      'How many clouds are there',
+                      'hOW MANY CLOUDS ARE THere',
                       'Tell me about the clouds']
 
     def test_basic_clouds_questions(self):
