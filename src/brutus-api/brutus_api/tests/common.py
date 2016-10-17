@@ -37,6 +37,7 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
 
         self.app.config['NLC_WATSON_USERNAME'] = 'error_if_not_present'
         self.app.config['NLC_WATSON_PASSWORD'] = 'error_if_not_present'
+        self.app.config['NLC_CLASSIFIER_NAME'] = 'brutus_api'
 
         # connect to and initialize the database
         self.db = connect_db(self.app.config['DATABASE'])
@@ -122,6 +123,12 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
         Register common URLs and their JSON responses for general testing.
         """
 
+        self.register_bluemix_url()
+        self.register_nlc_classify_url()
+        self.register_math_module_urls()
+        self.register_weather_module_urls()
+
+    def register_bluemix_url(self):
         # bluemix
         responses.add(
             responses.GET,
@@ -144,6 +151,13 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
             status=200,
             content_type='application/json')
 
+    def register_nlc_classify_url(self, classes=None):
+        if(classes is None):
+            classes = [
+                {'confidence': 0.92, 'class_name': 'math'},
+                {'confidence': 0.08, 'class_name': 'weather'}
+            ]
+
         responses.add(
             responses.POST,
             "".join([
@@ -151,32 +165,34 @@ class BrutusTestCase(unittest.TestCase, metaclass=ABCMeta):
                 '/v1/classifiers/TESTID/classify'
             ]),
             body=json.dumps({
-                'classes': [
-                    {'confidence': 90, 'class_name': 'math'}
-                ]
+                'classes': classes
             }),
             status=200,
             content_type='application/json')
 
-        # math module
+    def register_math_module_urls(self, response=None):
+        if(response is None):
+            response = {
+                "input": {"text": "what is 1 plus 1"},
+                "output": {"text": "2"}
+            }
         responses.add(
             responses.POST,
             "http://127.0.0.1:5010/api/request",
-            body=json.dumps({
-                "input": {"text": "what is 1 plus 1"},
-                "output": {"text": "2"}
-            }),
+            body=json.dumps(response),
             status=200,
             content_type="application/json")
 
-        # weather module
+    def register_weather_module_urls(self, response=None):
+        if(response is None):
+            response = {
+                "input": {"text": "what is the weather"},
+                "output": {"text": "sunny"}
+            }
         responses.add(
             responses.POST,
             "http://127.0.0.1:5020/api/request",
-            body=json.dumps({
-                "input": {"text": "what is the weather"},
-                "output": {"text": "sunny"}
-            }),
+            body=json.dumps(response),
             status=200,
             content_type="application/json")
 
