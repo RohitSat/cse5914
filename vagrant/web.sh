@@ -61,3 +61,15 @@ start brutus-api-worker
 
 # configure the vagrant user's profile
 echo 'source /home/vagrant/env/bin/activate' >> /home/vagrant/.profile
+
+# initialize the brutus-api backend database
+source "/vagrant/conf/brutus-api.sh"
+rm -f "${DATABASE}"
+
+curl -L -s http://127.0.0.1:5000/ ; echo ""
+for i in math,http://127.0.0.1:5010 weather,http://127.0.0.1:5020; do
+    IFS=',' read name url <<< "${i}"
+    curl -X POST -H "Content-Type: application/json" \
+        -d "{\"name\":\"${name}\",\"url\":\"${url}\"}" \
+        http://127.0.0.1:5000/api/module
+done
