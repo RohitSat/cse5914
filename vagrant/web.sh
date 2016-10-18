@@ -67,10 +67,11 @@ echo 'source /home/vagrant/env/bin/activate' >> /home/vagrant/.profile
 
 # initialize the brutus-api backend database
 source "/vagrant/conf/brutus-api.sh"
-rm -f "${DATABASE}"
+export LOCAL="http://127.0.0.1"
 
-curl -L -s http://127.0.0.1:5000/ > /dev/null
-for i in math,http://127.0.0.1:5010 weather,http://127.0.0.1:5020; do
+rm -f "${DATABASE}"
+curl -L -s "$LOCAL:5000" > /dev/null
+for i in math,$LOCAL:5010 weather,$LOCAL:5020 search,$LOCAL:5030; do
     IFS=',' read name url <<< "${i}"
     curl -s -X POST -H "Content-Type: application/json" \
         -d "{\"name\":\"${name}\",\"url\":\"${url}\"}" \
