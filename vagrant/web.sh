@@ -27,6 +27,7 @@ pip install -e /vagrant/src/brutus-api
 pip install -e /vagrant/src/brutus-module-math
 pip install -e /vagrant/src/brutus-module-weather
 pip install -e /vagrant/src/brutus-module-search
+
 # fix virtualenv permissions (because we're running as root)
 chown -R vagrant:vagrant /home/vagrant/env
 
