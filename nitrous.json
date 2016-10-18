@@ -1,12 +1,13 @@
 {
   "template": "python",
-  "ports": [5000, 5010, 5020],
+  "ports": [5000, 5010, 5020, 5030],
   "name": "cse5914",
   "scripts": {
     "Start Brutus API": "cd $HOME/code/cse5914 ; make run-api",
     "Start Brutus API Worker": "source $HOME/code/cse5914/conf/brutus-api.sh ; rq worker",
     "Start Brutus Math Module": "cd $HOME/code/cse5914 ; make run-module-math",
     "Start Brutus Weather Module": "cd $HOME/code/cse5914 ; make run-module-weather",
+    "Start Brutus Search Module": "cd $HOME/code/cse5914 ; make run-module-search" ,
     "Run tests": "pushd $HOME/code/cse5914 ; make test ; popd",
     "Host Web Client": "cd $HOME/code/cse5914/src/webClient ; python -m http.server 3000"
   }

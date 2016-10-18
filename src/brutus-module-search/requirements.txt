@@ -1,0 +1,6 @@
+gunicorn==19.6.0
+Flask==0.11.1
+
+# testing
+pep8==1.7.0
+pytest==3.0.2

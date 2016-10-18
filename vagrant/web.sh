@@ -20,11 +20,13 @@ source /home/vagrant/env/bin/activate
 pip install -r /vagrant/src/brutus-api/requirements.txt
 pip install -r /vagrant/src/brutus-module-math/requirements.txt
 pip install -r /vagrant/src/brutus-module-weather/requirements.txt
+pip install -r /vagrant/src/brutus-module-search/requirements.txt
 
 # install the web app in-place (you can update the code without reinstalling)
 pip install -e /vagrant/src/brutus-api
 pip install -e /vagrant/src/brutus-module-math
 pip install -e /vagrant/src/brutus-module-weather
+pip install -e /vagrant/src/brutus-module-search
 
 # fix virtualenv permissions (because we're running as root)
 chown -R vagrant:vagrant /home/vagrant/env
@@ -38,9 +40,13 @@ install -o root -g root -m 0644 \
   /vagrant/vagrant/web-upstart-brutus-module-math.conf \
   /etc/init/brutus-module-math.conf
 
-  install -o root -g root -m 0644 \
-    /vagrant/vagrant/web-upstart-brutus-module-weather.conf \
-    /etc/init/brutus-module-weather.conf
+install -o root -g root -m 0644 \
+  /vagrant/vagrant/web-upstart-brutus-module-weather.conf \
+  /etc/init/brutus-module-weather.conf
+
+install -o root -g root -m 0644 \
+  /vagrant/vagrant/web-upstart-brutus-module-search.conf \
+  /etc/init/brutus-module-search.conf
 
 install -o root -g root -m 0644 \
   /vagrant/vagrant/web-upstart-brutus-api-worker.conf \
@@ -50,6 +56,7 @@ initctl reload-configuration
 start brutus-api
 start brutus-module-math
 start brutus-module-weather
+start brutus-module-search
 start brutus-api-worker
 
 # configure the vagrant user's profile
