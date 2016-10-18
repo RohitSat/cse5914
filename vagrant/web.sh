@@ -40,13 +40,13 @@ install -o root -g root -m 0644 \
   /vagrant/vagrant/web-upstart-brutus-module-math.conf \
   /etc/init/brutus-module-math.conf
 
-  install -o root -g root -m 0644 \
-    /vagrant/vagrant/web-upstart-brutus-module-weather.conf \
-    /etc/init/brutus-module-weather.conf
+install -o root -g root -m 0644 \
+  /vagrant/vagrant/web-upstart-brutus-module-weather.conf \
+  /etc/init/brutus-module-weather.conf
 
-  install -o root -g root -m 0644 \
-    /vagrant/vagrant/web-upstart-brutus-module-search.conf \
-    /etc/init/brutus-module-search.conf
+install -o root -g root -m 0644 \
+  /vagrant/vagrant/web-upstart-brutus-module-search.conf \
+  /etc/init/brutus-module-search.conf
 
 install -o root -g root -m 0644 \
   /vagrant/vagrant/web-upstart-brutus-api-worker.conf \
