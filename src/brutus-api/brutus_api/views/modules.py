@@ -83,3 +83,6 @@ def delete_module(mod_id):
 
     # commit the transaction
     g.db.commit()
+
+    # return an empty response
+    return '', 204
