@@ -50,7 +50,7 @@ def get_module(mod_id):
         abort(404)
 
     # return the module data
-    return json.jsonify(format_request(module))
+    return json.jsonify(dict(module))
 
 
 @app.route('/api/module/<int:mod_id>', methods=['DELETE'])
