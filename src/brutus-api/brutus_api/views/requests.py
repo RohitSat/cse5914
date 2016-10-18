@@ -1,11 +1,8 @@
-import itertools
-
 from flask import g, request, render_template, json, abort
 
-from .app import app
-from .tasks import process_request
-
-from .database import query_db, insert_db
+from brutus_api.app import app
+from brutus_api.tasks import process_request
+from brutus_api.database import query_db, insert_db
 
 
 def format_request(data):
@@ -35,25 +32,6 @@ def format_request(data):
         request['output'] = {'text': data['output']}
 
     return request
-
-
-@app.route('/')
-def index():
-    """
-    Get the index page.
-    """
-
-    return "Brutus API"
-
-
-@app.route('/api/module', methods=['GET'])
-def modules():
-    """
-    Get configured modules.
-    """
-
-    modules = map(dict, query_db(g.db, 'SELECT * FROM module'))
-    return json.jsonify(list(modules))
 
 
 @app.route('/api/request', methods=['GET', 'POST'])
