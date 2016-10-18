@@ -8,8 +8,8 @@ CREATE TABLE IF NOT EXISTS request (
     id INTEGER PRIMARY KEY,
     job_id TEXT,
     module_id INTEGER,
-    status TEXT,
-    input TEXT,
+    status TEXT NOT NULL,
+    input TEXT NOT NULL,
     output TEXT,
     FOREIGN KEY (module_id) REFERENCES module(id)
 );

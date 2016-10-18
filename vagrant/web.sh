@@ -59,5 +59,21 @@ start brutus-module-weather
 start brutus-module-search
 start brutus-api-worker
 
+# wait for services to start
+sleep 3
+
 # configure the vagrant user's profile
 echo 'source /home/vagrant/env/bin/activate' >> /home/vagrant/.profile
+
+# initialize the brutus-api backend database
+source "/vagrant/conf/brutus-api.sh"
+export LOCAL="http://127.0.0.1"
+
+rm -f "${DATABASE}"
+curl -L -s "$LOCAL:5000" > /dev/null
+for i in math,$LOCAL:5010 weather,$LOCAL:5020 search,$LOCAL:5030; do
+    IFS=',' read name url <<< "${i}"
+    curl -s -X POST -H "Content-Type: application/json" \
+        -d "{\"name\":\"${name}\",\"url\":\"${url}\"}" \
+        http://127.0.0.1:5000/api/module > /dev/null
+done
