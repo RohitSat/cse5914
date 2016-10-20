@@ -12,8 +12,8 @@ def find_document(question):
     """
 
     retrieve_and_rank = RetrieveAndRankV1(
-                username=app.config['RAR_WATSON_USERNAME'],
-                password=app.config['RAR_WATSON_PASSWORD'])
+        username=app.config['RAR_WATSON_USERNAME'],
+        password=app.config['RAR_WATSON_PASSWORD'])
     
     # Solr clusters
     solr_clusters = retrieve_and_rank.list_solr_clusters()
