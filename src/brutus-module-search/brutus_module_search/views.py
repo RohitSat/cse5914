@@ -3,7 +3,7 @@ import itertools
 from flask import g, request, render_template, json
 
 from brutus_module_search import app
-from .task import find_document
+from .tasks import find_document
 
 
 @app.route('/')
