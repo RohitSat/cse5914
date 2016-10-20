@@ -45,7 +45,6 @@ def calculate(string):
     string = fixSpecialCases(string)
     string = convertToNumbers(string)
     string = convertToSymbols(string)
-    # string = fixNegatives(string)
     string = stripWords(string)
     result = evaluate(string)
     resultstring = string + ' is ' + str(result)
@@ -66,13 +65,10 @@ def aFollowedByScale(string):
         if strarr[idx].lower() == "a":
             if (idx + 1 < len(strarr)) and (strarr[idx + 1].lower() in scales):
                 newstrarr.append("1")
-                # strarr[idx] = "1"
             else:
                 newstrarr.append(strarr[idx])
-                # newstrarr[idx]=strarr[idx]
         else:
             newstrarr.append(strarr[idx])
-            # newstrarr[idx]=strarr[idx]
 
     return ' '.join(newstrarr)
 
@@ -184,6 +180,3 @@ def stripWords(string):
 def evaluate(string):
     return eval(string)
 
-
-# import sys
-# print(calculate(sys.argv[1]))
