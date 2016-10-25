@@ -110,6 +110,7 @@ const startPolling = (jobID) => {
         if (obj.status === 'finished') {
           buttonStates.ready();
           writeToBox(obj.output.text, outputBox);
+          sayThing(obj.output.text);
         } else if (obj.status === 'queued' || obj.status === 'started') {
           //buttonStates.processing();
           setTimeout(poll(), timeout);
