@@ -47,7 +47,7 @@ submitButton.addEventListener('click', (e) => {
  * updates the content value of a DOM node
  * @param {string} value node value
  */
-const setNodeValue(node, value) => {
+const setNodeValue = (node, value) => {
   var tag = node.tagName.toLowerCase();
   if (tag == 'textarea') {
     node.value = value;
