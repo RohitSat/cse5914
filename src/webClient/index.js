@@ -33,8 +33,6 @@ document.addEventListener('DOMContentLoaded', buttonStates.ready);
 const sayThing = (thing) => {
   const synth = window.speechSynthesis;
   const utterance = new SpeechSynthesisUtterance(thing);
-  const engVoice = synth.getVoices()[3];
-  utterance.voice = engVoice;
   synth.speak(utterance);
 };
 
