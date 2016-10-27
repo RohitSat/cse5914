@@ -33,8 +33,6 @@ document.addEventListener('DOMContentLoaded', buttonStates.ready);
 const sayThing = (thing) => {
   const synth = window.speechSynthesis;
   const utterance = new SpeechSynthesisUtterance(thing);
-  const engVoice = synth.getVoices()[3];
-  utterance.voice = engVoice;
   synth.speak(utterance);
 };
 
@@ -46,12 +44,26 @@ submitButton.addEventListener('click', (e) => {
 });
 
 /**
+ * updates the content value of a DOM node
+ * @param {string} value node value
+ */
+const setNodeValue = (node, value) => {
+  var tag = node.tagName.toLowerCase();
+  if (tag == 'textarea') {
+    node.value = value;
+  }
+  else {
+    node.innerHTML = value;
+  }
+};
+
+/**
  * writes to a given dom node's innerhtml using a cool typing style.
  * @param  {string} text       the output text to be rendered
  * @param  {Number} [time=500] the total time the whole typing should take
  */
 const writeToBox = (text, box, time = 500) => {
-  box.innerHTML = '';
+  setNodeValue(box, '');
   const timeout = time / text.length;
   let counter = 0;
 
@@ -60,7 +72,7 @@ const writeToBox = (text, box, time = 500) => {
       if (counter++ > text.length) {
         clearInterval(interval);
       } else {
-        box.innerHTML = text.substring(0, counter);
+        setNodeValue(box, text.substring(0, counter));
       }
     },
     timeout
@@ -112,6 +124,7 @@ const startPolling = (jobID) => {
         if (obj.status === 'finished') {
           buttonStates.ready();
           writeToBox(obj.output.text, outputBox);
+          sayThing(obj.output.text);
         } else if (obj.status === 'queued' || obj.status === 'started') {
           //buttonStates.processing();
           setTimeout(poll(), timeout);
