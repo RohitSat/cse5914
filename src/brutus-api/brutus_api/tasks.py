@@ -61,10 +61,10 @@ def process_request(request_id):
     if module is None:
         raise RuntimeError("module {0} not found".format(module_name))
 
-    # update the request module
+    # update the session module
     db.execute(
-        'UPDATE request SET module_id = ? WHERE id = ?',
-        (module['id'], request_id))
+        'UPDATE session SET module_id = ? WHERE id = ?',
+        (module['id'], request['session_id']))
 
     db.commit()
 
