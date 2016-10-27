@@ -8,6 +8,7 @@
     "Start Brutus Math Module": "cd $HOME/code/cse5914 ; make run-module-math",
     "Start Brutus Weather Module": "cd $HOME/code/cse5914 ; make run-module-weather",
     "Start Brutus Search Module": "cd $HOME/code/cse5914 ; make run-module-search" ,
+    "Start Brutus Jokes Module": "cd $HOME/code/cse5914 ; make run-module-jokes" ,
     "Run tests": "pushd $HOME/code/cse5914 ; make test ; popd",
     "Host Web Client": "cd $HOME/code/cse5914/src/webClient ; python -m http.server 3000"
   }
