@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS module (
 CREATE TABLE IF NOT EXISTS session (
     id INTEGER PRIMARY KEY,
     module_id INTEGER,
+    module_data TEXT,
     status TEXT NOT NULL,
     FOREIGN KEY (module_id) REFERENCES module(id)
 );
