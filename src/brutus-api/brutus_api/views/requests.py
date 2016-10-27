@@ -10,18 +10,11 @@ def format_request(data):
     Convert raw request data into the format exposed by the API.
     """
 
-    # retrieve the request module
-    module = query_db(
-        g.db,
-        'SELECT * FROM module WHERE id = ?',
-        (data['module_id'], ),
-        single=True)
-
     # format the request data
     request = {
         'id': data['id'],
         'status': data['status'],
-        'module': None if module is None else module['name'],
+        'session_id': data['session_id'],
         'input': None,
         'output': None}
 
@@ -45,12 +38,37 @@ def requests():
         requests = map(format_request, query_db(g.db, 'SELECT * FROM request'))
         return json.jsonify(list(requests))
 
-    # create the request in the database
+    # check if we need to create a session
     input_data = request.get_json()
+    if 'session_id' in input_data:
+        # retrieve the existing session
+        session_id = input_data['session_id']
+        session = query_db(
+            g.db,
+            'SELECT * FROM session WHERE id = ?',
+            (session_id, ),
+            single=True)
+
+        if session is None:
+            # need to use a session id for an existing session
+            abort(400)
+
+        if session['status'] != 'open':
+            # need to use an open session
+            abort(400)
+
+    else:
+        # create a new session
+        session_id = insert_db(
+            g.db,
+            'INSERT INTO session (status) VALUES (?)',
+            ('open', ))
+
+    # create the request in the database
     request_id = insert_db(
         g.db,
-        'INSERT INTO request (status, input) VALUES (?, ?)',
-        ('created', input_data['text']))
+        'INSERT INTO request (session_id, status, input) VALUES (?, ?)',
+        (session_id, 'created', input_data['text']))
 
     g.db.commit()
 
@@ -66,7 +84,7 @@ def requests():
     return json.jsonify({
         'id': request_id,
         'job_id': job.id,
-        'module_id': None,
+        'session_id': session_id,
         'status': job.get_status(),
         'input': {'text': input_data['text']},
         'output': None})
