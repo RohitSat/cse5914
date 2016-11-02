@@ -42,6 +42,7 @@ scales = [
 
 
 def calculate(string):
+    """ Calculates the string """
     string = fixSpecialCases(string)
     string = convertToNumbers(string)
     string = convertToSymbols(string)
@@ -52,13 +53,14 @@ def calculate(string):
 
 
 def fixSpecialCases(string):
-    # a followed by scale:
+    """ Fixes Special Cases """
     string = aFollowedByScale(string)
     string = removePunctuation(string)
     return string
 
 
 def aFollowedByScale(string):
+    """ Fixes a followed by a scale """
     strarr = string.split()
     newstrarr = []
     for idx in range(len(strarr)):
@@ -74,7 +76,7 @@ def aFollowedByScale(string):
 
 
 def removePunctuation(string):
-    # removes punctuation other than .
+    """ Removes Punctuation """
     punctuationToRemove = ['?', ',', '"', "!", "'"]
     for punc in punctuationToRemove:
         string = string.replace(punc, '')
@@ -82,6 +84,7 @@ def removePunctuation(string):
 
 
 def convertToNumbers(string):
+     """ Convers numbers in string to digits """
 
     numwords = {}
 
@@ -112,6 +115,7 @@ def convertToNumbers(string):
 
 
 def convertWordToNumber(string, numwords):
+    """ Convert Words To Numbers """
     current = 0
     result = 0
     for word in string.split(" "):
@@ -134,6 +138,7 @@ def convertWordToNumber(string, numwords):
 
 
 def isNumber(string, numwords):
+    """ checks if a number is a number """
     if string in numwords:
         return True
     elif string.isdigit():
@@ -143,6 +148,7 @@ def isNumber(string, numwords):
 
 
 def convertToSymbols(string):
+    """ Converts to symbols """
     strarray = string.split()
     for i in range(len(strarray)):
         word = strarray[i]
@@ -165,6 +171,7 @@ def convertToSymbols(string):
 
 
 def stripWords(string):
+    """ Strips all words that are not digits """
     strarray = string.split()
     acceptablewords = ['+', '-', '/', '*']
     i = 0
@@ -178,5 +185,6 @@ def stripWords(string):
 
 
 def evaluate(string):
+    """ Evaluates the string """
     return eval(string)
 
