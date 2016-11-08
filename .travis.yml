@@ -7,11 +7,11 @@ before_install:
     - pip install -r src/brutus-api/requirements.txt
     - pip install -r src/brutus-module-math/requirements.txt
     - pip install -r src/brutus-module-weather/requirements.txt
-    - pip install -r src/webClient/tests/requirements.txt
+    - pip install -r src/webClient/requirements.txt
 install:
     - pip install -e src/brutus-api
     - pip install -e src/brutus-module-math
     - pip install -e src/brutus-module-weather
-    - pip install -e src/webClient/tests
 script:
     - make test
+    - make -C src/webClient test

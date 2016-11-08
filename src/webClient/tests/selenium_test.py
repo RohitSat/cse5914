@@ -5,11 +5,11 @@ from selenium.webdriver.common.keys import Keys
 
 from flask import json
 
-class seleniumTest(unittest.TestCase):
+class SeleniumTest(unittest.TestCase):
     """
     Simple test cases for the web client. Pls work.
     """
-    def test_test(self):
+    def test_initial(self):
       """
       Check if selenium is working as expected
       """
