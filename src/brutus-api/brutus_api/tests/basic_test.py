@@ -106,6 +106,7 @@ class BasicTestCase(BrutusTestCase):
 
         # retrieve the request
         request_id = create_data['id']
+        session_id = create_data['session_id']
         retrieve_data, _ = self.parse_response(self.client.get(
             self.BRUTUS_API_REQUEST_BY_ID.format(id=request_id)))
 
@@ -114,5 +115,5 @@ class BasicTestCase(BrutusTestCase):
             'id': request_id,
             'input': request_data,
             'output': {'text': '2'},
-            'module': 'math',
+            'session_id': session_id,
             'status': 'finished'}
