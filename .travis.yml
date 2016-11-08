@@ -4,14 +4,18 @@ python:
 services:
   - redis-server
 before_install:
-    - pip install -r src/brutus-api/requirements.txt
-    - pip install -r src/brutus-module-math/requirements.txt
-    - pip install -r src/brutus-module-weather/requirements.txt
-    - pip install -r src/webClient/requirements.txt
+  - pip install -r src/brutus-api/requirements.txt
+  - pip install -r src/brutus-module-math/requirements.txt
+  - pip install -r src/brutus-module-weather/requirements.txt
+  - pip install -r src/webClient/requirements.txt
 install:
-    - pip install -e src/brutus-api
-    - pip install -e src/brutus-module-math
-    - pip install -e src/brutus-module-weather
+  - pip install -e src/brutus-api
+  - pip install -e src/brutus-module-math
+  - pip install -e src/brutus-module-weather
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xcfb start"
+  - sleep 3 # give xcfb some time to start
 script:
-    - make test
-    - make -C src/webClient test
+  - make test
+  - make -C src/webClient test
