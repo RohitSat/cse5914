@@ -67,7 +67,7 @@ def requests():
     # create the request in the database
     request_id = insert_db(
         g.db,
-        'INSERT INTO request (session_id, status, input) VALUES (?, ?)',
+        'INSERT INTO request (session_id, status, input) VALUES (?, ?, ?)',
         (session_id, 'created', input_data['text']))
 
     g.db.commit()
