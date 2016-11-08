@@ -101,16 +101,26 @@ def process_request(request_id):
     module_url = "{0}/api/request".format(module['url'])
     response = requests.post(module_url, json=request_data)
 
-    if response.text is not None:
-        result = json.loads(r.text)
-        output = result['output']
+    if response is None:
+        raise RuntimeError(
+            "failed to connect to {0} module".format(module['name']))
+
+    response_data = json.loads(response.text)
+    if 'data' in response_data:
+        # update the session module data
+        db.execute(
+            'UPDATE session SET module_data = ? WHERE id = ?',
+            (json.dumps(response_data['data']), session_id))
 
     else:
-        output = {'text': 'An error occured processing your request.'}
+        # close the session
+        db.execute(
+            'UPDATE session SET status = \'closed\' WHERE id = ?',
+            (session_id, ))
 
     # update the request
     db.execute(
         'UPDATE request SET status = \'finished\', output = ? WHERE id = ?',
-        (output['text'], request_id))
+        (response_data['output']['text'], request_id))
 
     db.commit()
