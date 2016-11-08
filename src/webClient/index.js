@@ -1,6 +1,6 @@
 // No framework makes for a sloppy js file :(
 
-const baseURL = 'http://cse5914-218011.nitrousapp.com:5000';
+const baseURL = 'http://localhost:5000';
 
 // speech recognition
 var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
