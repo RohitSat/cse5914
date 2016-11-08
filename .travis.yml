@@ -14,7 +14,7 @@ install:
   - pip install -e src/brutus-module-weather
 before_script:
   - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xcfb start"
+  - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xcfb some time to start
 script:
   - make test
