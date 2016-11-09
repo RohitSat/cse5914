@@ -107,7 +107,10 @@ const postQuery = (query) => {
       throw new Error('Error with posting query');
     })
     .then(res => res.json())
-    .then(obj => obj.id)
+    .then(obj => {
+      updateSession(obj.session_id);
+      return obj.id
+    })
     .then(startPolling)
     .catch(console.log);
 };
