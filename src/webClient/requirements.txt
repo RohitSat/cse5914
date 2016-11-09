@@ -2,4 +2,4 @@
 pep8
 pytest
 HTTPretty
-selenium
+selenium==2.53.6
