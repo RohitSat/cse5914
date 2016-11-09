@@ -5,6 +5,7 @@ const baseURL = 'http://localhost:5000';
 // speech recognition
 var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
 var recognition = new SpeechRecognition();
+let sessionID = undefined;
 recognition.lang = 'en-US';
 recognition.interimResults = false;
 recognition.maxAlternatives = 1;
@@ -35,6 +36,10 @@ const sayThing = (thing) => {
   const utterance = new SpeechSynthesisUtterance(thing);
   synth.speak(utterance);
 };
+
+const updateSession = (session) => {
+  sessionID = session;
+}
 
 submitButton.addEventListener('click', (e) => {
   const val = textInput.value;
@@ -85,10 +90,14 @@ const writeToBox = (text, box, time = 500) => {
  * @return {Promise}       promise returned from fetch
  */
 const postQuery = (query) => {
+  const params = { text: query };
+  if (sessionID !== undefined) {
+    params.session_id = sessionID;
+  }
   const queryRequestSettings = {
     method: 'POST',
     headers: new Headers({ 'Content-Type': 'application/json' }),
-    body: JSON.stringify({ text: query }),
+    body: JSON.stringify(params),
   };
   fetch(baseURL + '/api/request', queryRequestSettings)
     .then(res => {
