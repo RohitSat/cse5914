@@ -134,9 +134,23 @@ const startPolling = (jobID) => {
       .then(res => res.json())
       .then(obj => {
         if (obj.status === 'finished') {
-          buttonStates.ready();
-          writeToBox(obj.output.text, outputBox);
-          sayThing(obj.output.text);
+          const outputText = obj.output.text;
+          return fetch(`${baseURL}/api/session/${sessionID}`)
+            .then(res => {
+            if (res.ok) {
+              return res;
+            }
+            throw new Error('Error checking sessionID, id:', sessionID);
+          })
+          .then(res => res.json())
+          .then(obj => {
+            if (obj.status === 'closed') {
+              updateSession(undefined);
+            }
+            writeToBox(outputText, outputBox);
+            sayThing(outputText);
+            buttonStates.ready();
+          });
         } else if (obj.status === 'queued' || obj.status === 'started') {
           //buttonStates.processing();
           setTimeout(poll(), timeout);
