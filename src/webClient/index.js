@@ -136,7 +136,7 @@ const startPolling = (jobID) => {
       .catch(console.log);
   };
 
-  const timeoutClear = setTimeout(poll(), timeout);
+  setTimeout(poll(), timeout);
 }
 
 const startListening = (e) => {
