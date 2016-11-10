@@ -51,7 +51,7 @@ def process_request(request_id):
 
     # update the request status
     db.execute(
-        'UPDATE request SET status = \'started\' WHERE id = ?',
+        "UPDATE request SET status = 'started' WHERE id = ?",
         (request_id, ))
 
     db.commit()
@@ -117,12 +117,12 @@ def process_request(request_id):
         else:
             # close the session
             db.execute(
-                'UPDATE session SET status = \'closed\' WHERE id = ?',
+                "UPDATE session SET status = 'closed' WHERE id = ?",
                 (session_id, ))
 
         # update the request with a finished state
         db.execute(
-            'UPDATE request SET status = \'finished\', output = ? WHERE id = ?',
+            "UPDATE request SET status = 'finished', output = ? WHERE id = ?",
             (response_data['output']['text'], request_id))
 
         db.commit()
@@ -130,12 +130,12 @@ def process_request(request_id):
     except Exception as e:
         # update the request with a failed state and generic error message
         db.execute(
-            'UPDATE request SET status = \'failed\', output = ? WHERE id = ?',
+            "UPDATE request SET status = 'failed', output = ? WHERE id = ?",
             ("Something went wrong. Try again a little later.", request_id))
 
         # close the session
         db.execute(
-            'UPDATE session SET status = \'closed\' WHERE id = ?',
+            "UPDATE session SET status = 'closed' WHERE id = ?",
             (session_id, ))
 
         # commit the changes
