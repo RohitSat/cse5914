@@ -1,28 +1,27 @@
+import sqlite3
 from flask import json
 
 from .app import app
 import json
 from watson_developer_cloud import RetrieveAndRankV1
+from .database import connect_db, query_db
 
-
-def find_document(question):
+def find_joke(question):
     """
-    user rank and retrieve to find the appropriate
-    document and return the answer to the users question
+    find a joke to tell the user
     """
+    # TODO get type of joke 
 
-    retrieve_and_rank = RetrieveAndRankV1(
-        username=app.config['RAR_WATSON_USERNAME'],
-        password=app.config['RAR_WATSON_PASSWORD'])
-    
-    pysolr_client = retrieve_and_rank.get_pysolr_client(
-        app.config['RAR_WATSON_CLUSTER_ID'],
-        app.config['RAR_WATSON_COLLECTION_NAME'])
+    db = connect_db(app.config['DATABASE'])
+    # joke_type = 'knock knock'
+    joke = query_db(
+            db, 
+            'SELECT * FROM jokes ORDER BY RANDOM() LIMIT 1;',
+            (),
+            single=True) 
 
-    results = pysolr_client.jokes(question)
-    if(len(results.docs) > 0):
-        return results.docs[0]['body'][0]
+    if(request is None):
+        raise RuntimeError("joke {0} not found".format(joke_id))
 
-    # no results found
-    # TODO better error handling but this is due tomorrow..
-    return "I am sorry I was unable to find an answer to your question"
+
+    return joke['body']

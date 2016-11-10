@@ -3,7 +3,7 @@ import itertools
 from flask import g, request, render_template, json
 
 from brutus_module_jokes import app
-from .tasks import find_document
+from .tasks import find_joke
 
 
 @app.route('/')
@@ -23,6 +23,6 @@ def create_request():
 
     data = request.get_json()
     input_data = data['input']
-    resultstring = find_document(input_data['text'])
+    resultstring = find_joke(input_data['text'])
     result = {"input": input_data, 'output': {'text': resultstring}}
     return json.jsonify(result)
