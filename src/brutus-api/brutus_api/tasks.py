@@ -56,72 +56,90 @@ def process_request(request_id):
 
     db.commit()
 
-    # check if we need to classify the module
-    if session['module_id'] is None:
-        # classify the module using the natural language classifier
-        nlc = Nlc(
-            app.config['NLC_WATSON_USERNAME'],
-            app.config['NLC_WATSON_PASSWORD'],
-            app.config['NLC_CLASSIFIER_NAME'])
+    try:
+        # check if we need to classify the module
+        if session['module_id'] is None:
+            # classify the module using the natural language classifier
+            nlc = Nlc(
+                app.config['NLC_WATSON_USERNAME'],
+                app.config['NLC_WATSON_PASSWORD'],
+                app.config['NLC_CLASSIFIER_NAME'])
 
-        module_name = nlc.classify(request['input'])
-        module = query_db(
-            db,
-            'SELECT * FROM module WHERE name = ?',
-            (module_name, ),
-            single=True)
+            module_name = nlc.classify(request['input'])
+            module = query_db(
+                db,
+                'SELECT * FROM module WHERE name = ?',
+                (module_name, ),
+                single=True)
 
-        if module is None:
+            if module is None:
+                raise RuntimeError(
+                    "module with name {0} not found".format(module_name))
+
+            # update the session module
+            db.execute(
+                'UPDATE session SET module_id = ? WHERE id = ?',
+                (module['id'], session_id))
+
+            db.commit()
+
+        # retrieve the session module
+        else:
+            module = query_db(
+                db,
+                'SELECT * FROM module WHERE id = ?',
+                (session['module_id'], ),
+                single=True)
+
+            if module is None:
+                raise RuntimeError(
+                    "module {0} not found".format(session['module_id']))
+
+        # query the module
+        request_data = {'input': {'text': request['input']}, 'data': {}}
+        if session['module_data'] is not None:
+            request_data['data'] = json.loads(session['module_data'])
+
+        module_url = "{0}/api/request".format(module['url'])
+        response = requests.post(module_url, json=request_data)
+
+        if response.status_code != 200:
             raise RuntimeError(
-                "module with name {0} not found".format(module_name))
+                "request to {0} module failed".format(module['name']))
 
-        # update the session module
+        response_data = json.loads(response.text)
+        if 'data' in response_data:
+            # update the session module data
+            db.execute(
+                'UPDATE session SET module_data = ? WHERE id = ?',
+                (json.dumps(response_data['data']), session_id))
+
+        else:
+            # close the session
+            db.execute(
+                'UPDATE session SET status = \'closed\' WHERE id = ?',
+                (session_id, ))
+
+        # update the request with a finished state
         db.execute(
-            'UPDATE session SET module_id = ? WHERE id = ?',
-            (module['id'], session_id))
+            'UPDATE request SET status = \'finished\', output = ? WHERE id = ?',
+            (response_data['output']['text'], request_id))
 
         db.commit()
 
-    # retrieve the session module
-    else:
-        module = query_db(
-            db,
-            'SELECT * FROM module WHERE id = ?',
-            (session['module_id'], ),
-            single=True)
-
-        if module is None:
-            raise RuntimeError(
-                "module {0} not found".format(session['module_id']))
-
-    # query the module
-    request_data = {'input': {'text': request['input']}, 'data': {}}
-    if session['module_data'] is not None:
-        request_data['data'] = json.loads(session['module_data'])
-
-    module_url = "{0}/api/request".format(module['url'])
-    response = requests.post(module_url, json=request_data)
-
-    if response is None:
-        raise RuntimeError(
-            "failed to connect to {0} module".format(module['name']))
-
-    response_data = json.loads(response.text)
-    if 'data' in response_data:
-        # update the session module data
+    except Exception as e:
+        # update the request with a failed state and generic error message
         db.execute(
-            'UPDATE session SET module_data = ? WHERE id = ?',
-            (json.dumps(response_data['data']), session_id))
+            'UPDATE request SET status = \'failed\', output = ? WHERE id = ?',
+            ("Something went wrong. Try again a little later.", request_id))
 
-    else:
         # close the session
         db.execute(
             'UPDATE session SET status = \'closed\' WHERE id = ?',
             (session_id, ))
 
-    # update the request
-    db.execute(
-        'UPDATE request SET status = \'finished\', output = ? WHERE id = ?',
-        (response_data['output']['text'], request_id))
+        # commit the changes
+        db.commit()
 
-    db.commit()
+        # stop running
+        return
