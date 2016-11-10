@@ -81,6 +81,7 @@ def process_request(request_id):
             (module['id'], session_id))
 
         db.commit()
+
     # retrieve the session module
     else:
         module = query_db(
