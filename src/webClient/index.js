@@ -147,6 +147,8 @@ const startPolling = (jobID) => {
             if (obj.status === 'closed') {
               updateSession(undefined);
             }
+
+            outputBox.style.backgroundColor = "white";
             writeToBox(outputText, outputBox);
             sayThing(outputText);
             buttonStates.ready();
@@ -155,8 +157,10 @@ const startPolling = (jobID) => {
           //buttonStates.processing();
           setTimeout(poll(), timeout);
         } else if (obj.status === 'failed') {
-          writeToBox('Request failed at processing stage', outputBox);
           buttonStates.ready();
+          outputBox.style.backgroundColor = "pink";
+          writeToBox(obj.output.text, outputBox);
+          sayThing(obj.output.text);
         }
       })
       .catch(console.log);
