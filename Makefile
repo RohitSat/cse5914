@@ -43,12 +43,8 @@ test: test-style test-unit
 
 test-style:
 	@$(foreach project,$(PROJECTS), \
-		cd src/$(project); \
-		$(MAKE) test-style; \
-		cd $(TOP); )
+		$(MAKE) -C src/$(project) test-style)
 
 test-unit:
 	@$(foreach project,$(PROJECTS), \
-		cd src/$(project); \
-		$(MAKE) test-unit; \
-		cd $(TOP); )
+		$(MAKE) -C src/$(project) test-unit)
