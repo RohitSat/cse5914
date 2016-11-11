@@ -17,5 +17,7 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xcfb some time to start
 script:
-  - make test
+  - make -C src/brutus-api test
+  - make -C src/brutus-module-math test
+  - make -C src/brutus-module-weather test
   - make -C src/webClient test
