@@ -52,10 +52,10 @@ install -o root -g root -m 0644 \
 
 install -o root -g root -m 0644 \
   /vagrant/vagrant/web-upstart-brutus-module-jokes.conf \
-  /etc/init/brutus-module-search.conf
+  /etc/init/brutus-module-jokes.conf
 
 install -o root -g root -m 0644 \
-  /vagrant/vagrant/web-upstart-brutus-api-jokes.conf \
+  /vagrant/vagrant/web-upstart-brutus-api-worker.conf \
   /etc/init/brutus-api-worker.conf
 
 initctl reload-configuration
