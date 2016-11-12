@@ -14,11 +14,13 @@ class ComplexExpressionTestCase(BrutusTestCase):
     """
 
     prefixes = ['what is']
-    operators = {'+': '+', '+': 'plus',
-                 '-': '-', '-': 'minus',
-                 '*': '*', '*': 'times',
-                 '/': '/', '/': 'over'}
-    numbers = {1: '1', 22: '22', 6443: '6443', 32313: '32313',
+    operators = {
+        '+': ['+', 'plus'],
+        '-': ['-', 'minus'],
+        '*': ['*', 'times'],
+        '/': ['/', 'over']
+    }
+    nums = {1: '1', 22: '22', 6443: '6443', 32313: '32313',
                17: 'seventeen', 18: 'eighteen', 19: 'ninteen',
                50: 'fifty', 66: 'sixty six', 70: 'seventy',
                100: 'a hundred', 1000: 'thousand'}
@@ -29,28 +31,33 @@ class ComplexExpressionTestCase(BrutusTestCase):
     """
     def test_complexExpressions(self):
         # create combos for tests
-        terms = self.addOperatorTerm(self.operators, self.numbers)
-        cases = self.addOperatorTerm(self.numbers, terms)
-        cases = self.addOperatorTerm(cases, terms)
-        cases = self.addOperatorTerm(cases, terms)
-
+        # how big to make the expression, measured via number of operators
+        EXPRESSION_COMPLEXITY = 1
+        expns = self.makeExpression(self.nums, self.operators, self.nums)
+        for i in range(EXPRESSION_COMPLEXITY - 1):
+            expns = self.makeExpression(expns, self.operators, self.nums)
         for prefix in self.prefixes:
-            for sym, text in cases.items():
-                a = eval(sym)
-                text = prefix + " " + text
-                answer = "{} is {}".format(sym, a)
-                print(text)
-                assert self.get_result(text) == answer, text
+            for sym, reps in expns.items():
+                for rep in reps:
+                    expected_result = eval(sym)
+                    query = prefix + " " + rep
+                    expected_response = "{} is {}".format(sym, expected_result)
+                    assert self.get_result(query) == expected_response, query
 
     """
     add together terms for question
     """
-    def addOperatorTerm(self, first, second):
+    def makeExpression(self, leftTerms, operators, rightTerms):
         inputs = {}
-        for fSym, fText in first.items():
-            for sSym, sText in second.items():
-                symRep = "{} {}".format(fSym, sSym)
-                textRep = "{} {}".format(fText, sText)
-                inputs[symRep] = textRep
-
+        for leftSym, leftText in leftTerms.items():
+            for rightSym, rightText in rightTerms.items():
+                for operatorSym, operatorTexts in operators.items():
+                    symRep = "{} {} {}".format(leftSym, operatorSym, rightSym)
+                    inputs[symRep] = []
+                    for operator in operatorTexts:
+                        textRep = "{} {} {}".format(
+                            leftText,
+                            operator,
+                            rightText)
+                        inputs[symRep].append(textRep)
         return inputs
