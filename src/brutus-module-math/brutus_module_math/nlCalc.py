@@ -128,4 +128,9 @@ def stripWords(string):
 
 
 def evaluate(string):
-    return eval(string)
+    result = None
+    try:
+        result = eval(string)
+    except ZeroDivisionError:
+        print(string)
+    return result
