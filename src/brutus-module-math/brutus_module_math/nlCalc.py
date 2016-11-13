@@ -84,6 +84,8 @@ def convertWordToNumber(string):
         if word not in numwords:
             raise ValueError()
         scale, increment = numwords[word]
+        if increment == 0 and scale > 0 and current == 0:
+            current = 1
         current = current * scale + increment
         if scale > 100:
             result += current
