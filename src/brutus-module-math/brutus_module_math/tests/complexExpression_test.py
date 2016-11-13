@@ -23,7 +23,7 @@ class ComplexExpressionTestCase(BrutusTestCase):
     nums = {1: '1', 22: '22', 6443: '6443', 32313: '32313',
                17: 'seventeen', 18: 'eighteen', 19: 'ninteen',
                50: 'fifty', 66: 'sixty six', 70: 'seventy',
-               100: 'a hundred', 1000: 'thousand'}
+               100: 'hundred', 1000: 'thousand'}
 
     """
     test expressions with multiple operators
