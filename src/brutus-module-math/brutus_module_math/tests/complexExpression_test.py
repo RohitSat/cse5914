@@ -42,6 +42,10 @@ class ComplexExpressionTestCase(BrutusTestCase):
                     expected_result = eval(sym)
                     query = prefix + " " + rep
                     expected_response = "{} is {}".format(sym, expected_result)
+                    try:
+                        resp = self.get_result(query)
+                    except:
+                        print(query)
                     assert self.get_result(query) == expected_response, query
 
     """
