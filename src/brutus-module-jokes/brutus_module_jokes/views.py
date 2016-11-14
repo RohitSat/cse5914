@@ -21,27 +21,48 @@ def create_request():
     """
     Get requests or create a new request.
     """
-    data = request.get_json()
-    input_data = data['input']
-    past_data = data['data']
+    input_json = request.get_json()
+    input_data = input_json['input']
 
-    db = connect_db(app.config['DATABASE'])
-    joke = query_db(
-            db, 
-            'SELECT * FROM jokes ORDER BY RANDOM() LIMIT 1;',
-            (),
-            single=True) 
+    if 'data' not in input_json:
+        db = connect_db(app.config['DATABASE'])
+        joke = query_db(
+                db, 
+                'SELECT * FROM jokes ORDER BY RANDOM() LIMIT 1;',
+                (),
+                single=True) 
 
-    if(request is None):
-        raise RuntimeError("joke {0} not found".format(joke_id))
+        if(request is None):
+            raise RuntimeError("joke {0} not found".format(joke_id))
 
-    jokeId = joke['id'] 
-    joke = query_db(
-            db, 
-            'SELECT * FROM jokes_parts where jokeId = ? ORDER BY id;',
-            (jokeId, ),
-            ) 
+        jokeId = joke['id'] 
+        joke_parts = query_db(
+                db, 
+                'SELECT * FROM joke_parts where jokeId = ? ORDER BY id;',
+                (jokeId, ),
+                ) 
 
-    # result = {"input": input_data, 'output': {'text': j }, 'data' : { 'joke' : 'this is an example' }
-    result = {'input': input_data, 'output': {'text': j } }
+        line = joke_parts[0]['part']
+
+        if(len(joke_parts) > 1 ):
+            data = []
+            for p in joke_parts[1:]:
+                data.append(p['part'])
+
+            result = {'input': input_data, 
+                     'output': {'text': line },
+                     'data' : data }
+            return json.jsonify(result)
+
+        result = {'input': input_data, 'output': {'text': line } }
+        return json.jsonify(result)
+
+    past_data = input_json['data'] 
+    line = past_data[0]
+    past_data.pop(0)
+    if(len(past_data) > 0):
+        result = {'input': input_data, 'output': {'text': line}, 'data' : past_data }
+        return json.jsonify(result)
+        
+    result = {'input': input_data, 'output': {'text': line} }
     return json.jsonify(result)
