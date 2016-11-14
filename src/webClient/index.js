@@ -1,10 +1,11 @@
 // No framework makes for a sloppy js file :(
 
-const baseURL = 'http://cse5914-218011.nitrousapp.com:5000';
+const baseURL = 'http://localhost:5000';
 
 // speech recognition
 var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
 var recognition = new SpeechRecognition();
+let sessionID = undefined;
 recognition.lang = 'en-US';
 recognition.interimResults = false;
 recognition.maxAlternatives = 1;
@@ -33,10 +34,12 @@ document.addEventListener('DOMContentLoaded', buttonStates.ready);
 const sayThing = (thing) => {
   const synth = window.speechSynthesis;
   const utterance = new SpeechSynthesisUtterance(thing);
-  const engVoice = synth.getVoices()[3];
-  utterance.voice = engVoice;
   synth.speak(utterance);
 };
+
+const updateSession = (session) => {
+  sessionID = session;
+}
 
 submitButton.addEventListener('click', (e) => {
   const val = textInput.value;
@@ -46,12 +49,26 @@ submitButton.addEventListener('click', (e) => {
 });
 
 /**
+ * updates the content value of a DOM node
+ * @param {string} value node value
+ */
+const setNodeValue = (node, value) => {
+  var tag = node.tagName.toLowerCase();
+  if (tag == 'textarea') {
+    node.value = value;
+  }
+  else {
+    node.innerHTML = value;
+  }
+};
+
+/**
  * writes to a given dom node's innerhtml using a cool typing style.
  * @param  {string} text       the output text to be rendered
  * @param  {Number} [time=500] the total time the whole typing should take
  */
 const writeToBox = (text, box, time = 500) => {
-  box.innerHTML = '';
+  setNodeValue(box, '');
   const timeout = time / text.length;
   let counter = 0;
 
@@ -60,7 +77,7 @@ const writeToBox = (text, box, time = 500) => {
       if (counter++ > text.length) {
         clearInterval(interval);
       } else {
-        box.innerHTML = text.substring(0, counter);
+        setNodeValue(box, text.substring(0, counter));
       }
     },
     timeout
@@ -73,10 +90,14 @@ const writeToBox = (text, box, time = 500) => {
  * @return {Promise}       promise returned from fetch
  */
 const postQuery = (query) => {
+  const params = { text: query };
+  if (sessionID !== undefined) {
+    params.session_id = sessionID;
+  }
   const queryRequestSettings = {
     method: 'POST',
     headers: new Headers({ 'Content-Type': 'application/json' }),
-    body: JSON.stringify({ text: query }),
+    body: JSON.stringify(params),
   };
   fetch(baseURL + '/api/request', queryRequestSettings)
     .then(res => {
@@ -86,7 +107,10 @@ const postQuery = (query) => {
       throw new Error('Error with posting query');
     })
     .then(res => res.json())
-    .then(obj => obj.id)
+    .then(obj => {
+      updateSession(obj.session_id);
+      return obj.id
+    })
     .then(startPolling)
     .catch(console.log);
 };
@@ -110,8 +134,23 @@ const startPolling = (jobID) => {
       .then(res => res.json())
       .then(obj => {
         if (obj.status === 'finished') {
-          buttonStates.ready();
-          writeToBox(obj.output.text, outputBox);
+          const outputText = obj.output.text;
+          return fetch(`${baseURL}/api/session/${sessionID}`)
+            .then(res => {
+            if (res.ok) {
+              return res;
+            }
+            throw new Error('Error checking sessionID, id:', sessionID);
+          })
+          .then(res => res.json())
+          .then(obj => {
+            if (obj.status === 'closed') {
+              updateSession(undefined);
+            }
+            writeToBox(outputText, outputBox);
+            sayThing(outputText);
+            buttonStates.ready();
+          });
         } else if (obj.status === 'queued' || obj.status === 'started') {
           //buttonStates.processing();
           setTimeout(poll(), timeout);
@@ -123,7 +162,7 @@ const startPolling = (jobID) => {
       .catch(console.log);
   };
 
-  const timeoutClear = setTimeout(poll(), timeout);
+  setTimeout(poll(), timeout);
 }
 
 const startListening = (e) => {
