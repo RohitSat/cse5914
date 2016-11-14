@@ -64,7 +64,7 @@ INSERT INTO joke_parts(id, jokeId, part) values(NULL, (SELECT MAX(id) from jokes
 
 -- question jokes
 INSERT INTO jokes (id, type) values (NULL, "question");
-INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), "What happens to a frog's car when it breaks down?");
+INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), "What happens to a frogs car when it breaks down?");
 INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), "It gets toad away");
 
 INSERT INTO jokes (id, type) values (NULL, "question");
@@ -77,14 +77,14 @@ INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from joke
 
 INSERT INTO jokes (id, type) values (NULL, "question");
 INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), "Did you hear about the kidnapping at school?") ;
-INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), " It's okay. He woke up.");
+INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), " Its okay. He woke up.");
 
 INSERT INTO jokes (id, type) values (NULL, "question");
 INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), "Why does Humpty Dumpty love autumn?");
 INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), " Because Humpty Dumpty had a great fall");
 
 INSERT INTO jokes (id, type) values (NULL, "question");
-INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), "Why did the witches' team lose the baseball game?");
+INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), "Why did the witches team lose the baseball game?");
 INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), " Their bats flew away.");
 
 INSERT INTO jokes (id, type) values (NULL, "question");
@@ -92,7 +92,7 @@ INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from joke
 INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), " A pork chop.");
 
 INSERT INTO jokes (id, type) values (NULL, "question");
-INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), "What's the difference between Windows 95 and a virus");
+INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), "Whats the difference between Windows 95 and a virus");
 INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), " A virus does something");
 
 INSERT INTO jokes (id, type) values (NULL, "question");
@@ -127,7 +127,7 @@ INSERT INTO jokes (id, type) values (NULL, "oneliner");
 INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), "I was wondering why the ball kept getting bigger and bigger, and then it hit me");
 
 INSERT INTO jokes (id, type) values (NULL, "oneliner");
-INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes),"Zoo Keeper I've lost one of my elephants Other Zoo Keeper why don't you put an advert in the paper Zoo  Keeper Don't be silly he can't read ");
+INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes),"Zoo Keeper: I have lost one of my elephants. Other Zoo Keeper: why don't you put an advert in the paper. Zoo keeper: Don't be silly he can't read ");
 
 INSERT INTO jokes (id, type) values (NULL, "oneliner");
-INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), "camper: Look at that bunch of cows. Farmer: Not  bunch, herd. Camper: Heard what? Farmer: Of cows. Camper: Sure  I've heard of cows. Farmer: No, I mean a cowherd. Camper: So  what? I have no secrets from cows!");
+INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), "camper: Look at that bunch of cows. Farmer: Not  bunch, herd. Camper: Heard what? Farmer: Of cows. Camper: Sure  I have heard of cows. Farmer: No, I mean a cowherd. Camper: So  what? I have no secrets from cows!");
