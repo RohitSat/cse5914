@@ -78,7 +78,7 @@ export LOCAL="http://127.0.0.1"
 
 rm -f "${DATABASE}"
 curl -L -s "$LOCAL:5000" > /dev/null
-for i in math,$LOCAL:5010 weather,$LOCAL:5020 search,$LOCAL:5030; do
+for i in math,$LOCAL:5010 weather,$LOCAL:5020 search,$LOCAL:5030 joke,$LOCAL:5040; do
     IFS=',' read name url <<< "${i}"
     curl -s -X POST -H "Content-Type: application/json" \
         -d "{\"name\":\"${name}\",\"url\":\"${url}\"}" \
