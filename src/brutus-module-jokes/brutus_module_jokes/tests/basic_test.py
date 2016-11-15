@@ -18,7 +18,7 @@ class BasicTestCase(BrutusTestCase):
         """
 
         # create the request
-        request_data = {'input': {'text': 'Who is taylor swift'}}
+        request_data = {'input': {'text': 'tell me a joke'}}
         api_data, api_response = self.parse_response(self.client.post(
             self.BRUTUS_API_REQUEST,
             data=json.dumps(request_data),
