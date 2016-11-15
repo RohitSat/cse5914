@@ -21,12 +21,14 @@ pip install -r /vagrant/src/brutus-api/requirements.txt
 pip install -r /vagrant/src/brutus-module-math/requirements.txt
 pip install -r /vagrant/src/brutus-module-weather/requirements.txt
 pip install -r /vagrant/src/brutus-module-search/requirements.txt
+pip install -r /vagrant/src/brutus-module-jokes/requirements.txt
 
 # install the web app in-place (you can update the code without reinstalling)
 pip install -e /vagrant/src/brutus-api
 pip install -e /vagrant/src/brutus-module-math
 pip install -e /vagrant/src/brutus-module-weather
 pip install -e /vagrant/src/brutus-module-search
+pip install -e /vagrant/src/brutus-module-jokes
 
 # fix virtualenv permissions (because we're running as root)
 chown -R vagrant:vagrant /home/vagrant/env
@@ -49,6 +51,10 @@ install -o root -g root -m 0644 \
   /etc/init/brutus-module-search.conf
 
 install -o root -g root -m 0644 \
+  /vagrant/vagrant/web-upstart-brutus-module-jokes.conf \
+  /etc/init/brutus-module-jokes.conf
+
+install -o root -g root -m 0644 \
   /vagrant/vagrant/web-upstart-brutus-api-worker.conf \
   /etc/init/brutus-api-worker.conf
 
@@ -57,6 +63,7 @@ start brutus-api
 start brutus-module-math
 start brutus-module-weather
 start brutus-module-search
+start brutus-module-jokes
 start brutus-api-worker
 
 # wait for services to start
@@ -71,7 +78,7 @@ export LOCAL="http://127.0.0.1"
 
 rm -f "${DATABASE}"
 curl -L -s "$LOCAL:5000" > /dev/null
-for i in math,$LOCAL:5010 weather,$LOCAL:5020 search,$LOCAL:5030; do
+for i in math,$LOCAL:5010 weather,$LOCAL:5020 search,$LOCAL:5030 joke,$LOCAL:5040; do
     IFS=',' read name url <<< "${i}"
     curl -s -X POST -H "Content-Type: application/json" \
         -d "{\"name\":\"${name}\",\"url\":\"${url}\"}" \

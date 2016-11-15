@@ -24,12 +24,14 @@ source "${VENV}/bin/activate"
 pip install -r "${REPO}/src/brutus-api/requirements.txt"
 pip install -r "${REPO}/src/brutus-module-math/requirements.txt"
 pip install -r "${REPO}/src/brutus-module-weather/requirements.txt"
+pip install -r "${REPO}/src/brutus-module-jokes/requirements.txt"
 pip install -r "${REPO}/src/brutus-module-search/requirements.txt"
 
 # install the web app in-place (you can update the code without reinstalling)
 pip install -e "${REPO}/src/brutus-api"
 pip install -e "${REPO}/src/brutus-module-math"
 pip install -e "${REPO}/src/brutus-module-weather"
+pip install -e "${REPO}/src/brutus-module-jokes"
 pip install -e "${REPO}/src/brutus-module-search"
 
 # configure the nitrous user's profile
