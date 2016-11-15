@@ -1,3 +1,3 @@
 # brutus-module-jokes
 
-TODO.
+Module that responds with jokes
