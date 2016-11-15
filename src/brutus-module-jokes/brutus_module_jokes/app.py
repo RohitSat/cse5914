@@ -12,7 +12,7 @@ app = Flask(__name__)
 app.config.update(
     DEBUG=os.getenv('DEBUG', 'False') in ['true', 'True'],
     SECRET_KEY=os.getenv('SECRET_KEY', str(uuid.uuid4())),
-    DATABASE=os.getenv('JOKES_DATABASE','/tmp/jokes.db'),
+    DATABASE=os.getenv('JOKES_DATABASE', '/tmp/jokes.db'),
     RAR_WATSON_USERNAME=os.getenv('RAR_JOKES_USERNAME'),
     RAR_WATSON_PASSWORD=os.getenv('RAR_JOKES_PASSWORD'),
     RAR_WATSON_CLUSTER_ID=os.getenv('RAR_JOKES_CLUSTER_ID'),
@@ -51,6 +51,3 @@ def disconnect_database(exception):
     db = getattr(g, 'db', None)
     if db is not None:
         db.close()
-
-
-
