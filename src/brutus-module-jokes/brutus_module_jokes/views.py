@@ -24,7 +24,7 @@ def create_request():
     input_json = request.get_json()
     input_data = input_json['input']
 
-    if 'data' not in input_json:
+    if 'data' not in input_json or not input_json['data']: 
         db = connect_db(app.config['DATABASE'])
         joke = query_db(
                 db, 
