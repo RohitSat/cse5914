@@ -183,6 +183,7 @@ recognition.onresult = e => {
   console.log(`Speech was parsed to ${transcript} with confidence of ${confidence}`);
   if (confidence > .3) {
     writeToBox(transcript, textInput);
+    postQuery(transcript);
   }
 };
 
