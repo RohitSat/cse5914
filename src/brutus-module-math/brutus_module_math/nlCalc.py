@@ -84,10 +84,8 @@ def removePunctuation(string):
 
 
 def convertToNumbers(string):
-     """ Convers numbers in string to digits """
-
+    """ Converts the numbers in the string to digits """
     numwords = {}
-
     for idx, word in enumerate(units):
         numwords[word] = (1, idx)
     for idx, word in enumerate(tens):
@@ -99,11 +97,12 @@ def convertToNumbers(string):
     newarr = []
     idx = 0
     while(idx < len(oldarr)):
-        word = oldarr[idx]
-        if isNumber(word, numwords):
+        word = oldarr[idx].lower()
+
+        if isNumber(word.lower(), numwords):
             idx += 1
-            while(idx < len(oldarr) and isNumber(oldarr[idx], numwords)):
-                word = word + ' ' + oldarr[idx]
+            while(idx < len(oldarr) and isNumber(oldarr[idx].lower(), numwords)):
+                word = word + ' ' + oldarr[idx].lower()
                 idx += 1
             result = convertWordToNumber(word, numwords)
             newarr.append(result)
@@ -187,4 +186,3 @@ def stripWords(string):
 def evaluate(string):
     """ Evaluates the string """
     return eval(string)
-
