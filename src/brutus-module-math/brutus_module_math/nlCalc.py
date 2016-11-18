@@ -97,9 +97,9 @@ def convertToNumbers(string):
     newarr = []
     idx = 0
     while(idx < len(oldarr)):
-        word = oldarr[idx]
+        word = oldarr[idx].lower()
 
-        if isNumber(word, numwords):
+        if isNumber(word.lower(), numwords):
             idx += 1
             while(idx < len(oldarr) and isNumber(oldarr[idx], numwords)):
                 word = word + ' ' + oldarr[idx]
