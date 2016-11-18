@@ -11,6 +11,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         'Flask'
+        'watson-developer-cloud'
     ],
 
     entry_points={

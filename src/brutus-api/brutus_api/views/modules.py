@@ -1,7 +1,6 @@
-from flask import g, request, render_template, json, abort
+from flask import g, request, json, abort
 
 from brutus_api.app import app
-from brutus_api.tasks import process_request
 from brutus_api.database import query_db, insert_db
 
 
@@ -46,7 +45,7 @@ def get_module(mod_id):
         single=True)
 
     if module is None:
-        # request not found
+        # module not found
         abort(404)
 
     # return the module data
@@ -67,7 +66,7 @@ def delete_module(mod_id):
         single=True)
 
     if module is None:
-        # request not found
+        # module not found
         abort(404)
 
     # create a cursor so we can group multiple statements into a transaction

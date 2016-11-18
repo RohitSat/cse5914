@@ -1,4 +1,49 @@
+units = [
+    "zero",
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+    "ten",
+    "eleven",
+    "twelve",
+    "thirteen",
+    "fourteen",
+    "fifteen",
+    "sixteen",
+    "seventeen",
+    "eighteen",
+    "nineteen"
+]
+tens = [
+    "",
+    "",
+    "twenty",
+    "thirty",
+    "forty",
+    "fifty",
+    "sixty",
+    "seventy",
+    "eighty",
+    "ninety"
+]
+scales = [
+    "hundred",
+    "thousand",
+    "million",
+    "billion",
+    "trillion"
+]
+
+
 def calculate(string):
+    """ Calculates the string """
+    string = fixSpecialCases(string)
     string = convertToNumbers(string)
     string = convertToSymbols(string)
     string = stripWords(string)
@@ -7,71 +52,40 @@ def calculate(string):
     return resultstring
 
 
-def convertToNumbers(string):
-    oldarr = string.split()
-    newarr = []
-    for word in oldarr:
-        try:
-            newarr.append(convertWordToNumber(word))
-        except:
-            newarr.append(word)
+def fixSpecialCases(string):
+    """ Fixes Special Cases """
+    string = aFollowedByScale(string)
+    string = removePunctuation(string)
+    return string
 
-    i = 0
-    while(i < len(newarr) - 1):
-        if(newarr[i].isdigit()) and (newarr[i + 1].isdigit()):
-            cur = int(newarr[i]) + int(newarr[i + 1])
-            newarr.pop(i + 1)
-            newarr[i] = str(cur)
+
+def aFollowedByScale(string):
+    """ Fixes a followed by a scale """
+    strarr = string.split()
+    newstrarr = []
+    for idx in range(len(strarr)):
+        if strarr[idx].lower() == "a":
+            if (idx + 1 < len(strarr)) and (strarr[idx + 1].lower() in scales):
+                newstrarr.append("1")
+            else:
+                newstrarr.append(strarr[idx])
         else:
-            i = i + 1
+            newstrarr.append(strarr[idx])
 
-    return ' '.join(newarr)
+    return ' '.join(newstrarr)
 
 
-def convertWordToNumber(string):
+def removePunctuation(string):
+    """ Removes Punctuation """
+    punctuationToRemove = ['?', ',', '"', "!", "'"]
+    for punc in punctuationToRemove:
+        string = string.replace(punc, '')
+    return string
+
+
+def convertToNumbers(string):
+    """ Converts the numbers in the string to digits """
     numwords = {}
-    units = [
-        "zero",
-        "one",
-        "two",
-        "three",
-        "four",
-        "five",
-        "six",
-        "seven",
-        "eight",
-        "nine",
-        "ten",
-        "eleven",
-        "twelve",
-        "thirteen",
-        "fourteen",
-        "fifteen",
-        "sixteen",
-        "seventeen",
-        "eighteen",
-        "nineteen"
-    ]
-    tens = [
-        "",
-        "",
-        "twenty",
-        "thirty",
-        "forty",
-        "fifty",
-        "sixty",
-        "seventy",
-        "eighty",
-        "ninety"
-    ]
-    scales = [
-        "hundred",
-        "thousand",
-        "million",
-        "billion",
-        "trillion"
-    ]
-
     for idx, word in enumerate(units):
         numwords[word] = (1, idx)
     for idx, word in enumerate(tens):
@@ -79,22 +93,60 @@ def convertWordToNumber(string):
     for idx, word in enumerate(scales):
         numwords[word] = (10 ** (idx * 3 or 2), 0)
 
-    current = result = 0
-    for word in string.split("-"):
-        if word not in numwords:
-            raise ValueError()
-        scale, increment = numwords[word]
-        if increment == 0 and scale > 0 and current == 0:
-            current = 1
-        current = current * scale + increment
-        if scale > 100:
-            result += current
-            current = 0
+    oldarr = string.split()
+    newarr = []
+    idx = 0
+    while(idx < len(oldarr)):
+        word = oldarr[idx].lower()
 
-    return str(result + current)
+        if isNumber(word.lower(), numwords):
+            idx += 1
+            while(idx < len(oldarr) and isNumber(oldarr[idx].lower(), numwords)):
+                word = word + ' ' + oldarr[idx].lower()
+                idx += 1
+            result = convertWordToNumber(word, numwords)
+            newarr.append(result)
+        else:
+            idx += 1
+            newarr.append(word)
+
+    return ' '.join(newarr)
+
+
+def convertWordToNumber(string, numwords):
+    """ Convert Words To Numbers """
+    current = 0
+    result = 0
+    for word in string.split(" "):
+        if word in numwords:  # if the word is a word
+            scale, increment = numwords[word]
+            current = current * scale + increment
+            if scale > 100:
+                result += current
+                current = 0
+        elif word.isdigit():  # if the word is digits... assumes no scales...
+            scale = 1
+            increment = int(word)
+            current = current * 1 + increment  # Scale is assumed to be 1
+        else:
+            if not isNumber(word, numwords):  # Should Not happen
+                return word
+            raise ValueError("Word is neither digit nor digit")
+    result = result + current
+    return str(result)
+
+def isNumber(string, numwords):
+    """ checks if a number is a number """
+    if string in numwords:
+        return True
+    elif string.isdigit():
+        return True
+    else:
+        return False
 
 
 def convertToSymbols(string):
+    """ Converts to symbols """
     strarray = string.split()
     for i in range(len(strarray)):
         word = strarray[i]
@@ -117,6 +169,7 @@ def convertToSymbols(string):
 
 
 def stripWords(string):
+    """ Strips all words that are not digits """
     strarray = string.split()
     acceptablewords = ['+', '-', '/', '*']
     i = 0
@@ -130,9 +183,5 @@ def stripWords(string):
 
 
 def evaluate(string):
-    result = None
-    try:
-        result = eval(string)
-    except ZeroDivisionError:
-        print(string)
-    return result
+    """ Evaluates the string """
+    return eval(string)

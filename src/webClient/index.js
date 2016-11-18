@@ -1,10 +1,11 @@
 // No framework makes for a sloppy js file :(
 
-const baseURL = 'http://cse5914-218011.nitrousapp.com:5000';
+const baseURL = 'http://localhost:5000';
 
 // speech recognition
 var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
 var recognition = new SpeechRecognition();
+let sessionID = undefined;
 recognition.lang = 'en-US';
 recognition.interimResults = false;
 recognition.maxAlternatives = 1;
@@ -35,6 +36,10 @@ const sayThing = (thing) => {
   const utterance = new SpeechSynthesisUtterance(thing);
   synth.speak(utterance);
 };
+
+const updateSession = (session) => {
+  sessionID = session;
+}
 
 submitButton.addEventListener('click', (e) => {
   const val = textInput.value;
@@ -85,10 +90,14 @@ const writeToBox = (text, box, time = 500) => {
  * @return {Promise}       promise returned from fetch
  */
 const postQuery = (query) => {
+  const params = { text: query };
+  if (sessionID !== undefined) {
+    params.session_id = sessionID;
+  }
   const queryRequestSettings = {
     method: 'POST',
     headers: new Headers({ 'Content-Type': 'application/json' }),
-    body: JSON.stringify({ text: query }),
+    body: JSON.stringify(params),
   };
   fetch(baseURL + '/api/request', queryRequestSettings)
     .then(res => {
@@ -98,7 +107,10 @@ const postQuery = (query) => {
       throw new Error('Error with posting query');
     })
     .then(res => res.json())
-    .then(obj => obj.id)
+    .then(obj => {
+      updateSession(obj.session_id);
+      return obj.id
+    })
     .then(startPolling)
     .catch(console.log);
 };
@@ -122,21 +134,39 @@ const startPolling = (jobID) => {
       .then(res => res.json())
       .then(obj => {
         if (obj.status === 'finished') {
-          buttonStates.ready();
-          writeToBox(obj.output.text, outputBox);
-          sayThing(obj.output.text);
+          const outputText = obj.output.text;
+          return fetch(`${baseURL}/api/session/${sessionID}`)
+            .then(res => {
+            if (res.ok) {
+              return res;
+            }
+            throw new Error('Error checking sessionID, id:', sessionID);
+          })
+          .then(res => res.json())
+          .then(obj => {
+            if (obj.status === 'closed') {
+              updateSession(undefined);
+            }
+
+            outputBox.style.backgroundColor = "white";
+            writeToBox(outputText, outputBox);
+            sayThing(outputText);
+            buttonStates.ready();
+          });
         } else if (obj.status === 'queued' || obj.status === 'started') {
           //buttonStates.processing();
           setTimeout(poll(), timeout);
         } else if (obj.status === 'failed') {
-          writeToBox('Request failed at processing stage', outputBox);
           buttonStates.ready();
+          outputBox.style.backgroundColor = "pink";
+          writeToBox(obj.output.text, outputBox);
+          sayThing(obj.output.text);
         }
       })
       .catch(console.log);
   };
 
-  const timeoutClear = setTimeout(poll(), timeout);
+  setTimeout(poll(), timeout);
 }
 
 const startListening = (e) => {
@@ -153,6 +183,7 @@ recognition.onresult = e => {
   console.log(`Speech was parsed to ${transcript} with confidence of ${confidence}`);
   if (confidence > .3) {
     writeToBox(transcript, textInput);
+    postQuery(transcript);
   }
 };
 
