@@ -101,8 +101,8 @@ def convertToNumbers(string):
 
         if isNumber(word.lower(), numwords):
             idx += 1
-            while(idx < len(oldarr) and isNumber(oldarr[idx], numwords)):
-                word = word + ' ' + oldarr[idx]
+            while(idx < len(oldarr) and isNumber(oldarr[idx].lower(), numwords)):
+                word = word + ' ' + oldarr[idx].lower()
                 idx += 1
             result = convertWordToNumber(word, numwords)
             newarr.append(result)
@@ -186,4 +186,3 @@ def stripWords(string):
 def evaluate(string):
     """ Evaluates the string """
     return eval(string)
-
