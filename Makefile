@@ -1,5 +1,6 @@
 define \n
 
+
 endef
 
 # project settings
@@ -47,8 +48,8 @@ test: test-style test-unit
 
 test-style:
 	@$(foreach project,$(PROJECTS), \
-		$(MAKE) -C $(TOP)/src/$(project) test-style {\n})
+		$(MAKE) -C $(TOP)/src/$(project) test-style ${\n})
 
 test-unit:
 	@$(foreach project,$(PROJECTS), \
-		$(MAKE) -C $(TOP)/src/$(project) test-unit {\n})
+		$(MAKE) -C $(TOP)/src/$(project) test-unit ${\n})
