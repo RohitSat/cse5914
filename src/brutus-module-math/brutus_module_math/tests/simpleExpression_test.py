@@ -14,7 +14,7 @@ class SimpleExpressionTestCase(BrutusTestCase):
     """
 
     prefixes = ['what is', 'calculate', 'determine', '']
-    addOp = ['+', 'plus', 'added to']
+    addOp = ['+', 'plus']
     subtractOp = ['-', 'minus']
     multiplicationOp = ['*', 'multiplied by', 'times']
     divisionOp = ['/', 'over', 'divided by']
@@ -25,11 +25,11 @@ class SimpleExpressionTestCase(BrutusTestCase):
                11: 'eleven', 12: 'twelve', 13: 'thirteen',
                14: 'fourteen', 15: 'fifteen', 16: 'sixteen',
                17: 'seventeen', 18: 'eighteen', 19: 'nineteen',
-               20: 'twenty', 30: 'thirty', 40: 'fourty',
+               20: 'twenty', 30: 'thirty', 40: 'forty',
                50: 'fifty', 66: 'sixty six', 70: 'seventy',
                80: 'eighty', 90: 'ninety', 200: 'two hundred',
-               100: 'hundred', 1000: 'thousand',
-               10000: 'ten thousand', 1000000000: 'billion'}
+               100: 'one hundred', 1000: 'one thousand',
+               10000: 'ten thousand', 1000000000: 'one billion'}
 
     def test_addition(self):
         sym = '+'

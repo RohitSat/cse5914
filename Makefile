@@ -5,8 +5,7 @@ endef
 
 # project settings
 TOP := $(shell pwd)
-PROJECTS := brutus-api brutus-module-math brutus-module-weather brutus-module-jokes brutus-module-search
-
+PROJECTS := brutus-api brutus-module-math brutus-module-weather brutus-module-jokes
 ##
 # general
 ##

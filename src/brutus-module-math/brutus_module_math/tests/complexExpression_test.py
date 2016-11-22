@@ -44,9 +44,9 @@ class ComplexExpressionTestCase(BrutusTestCase):
                     expected_response = "{} is {}".format(sym, expected_result)
                     try:
                         resp = self.get_result(query)
+                        assert resp == expected_response, query
                     except:
                         print(query)
-                    assert resp == expected_response, query
 
     """
     add together terms for question
