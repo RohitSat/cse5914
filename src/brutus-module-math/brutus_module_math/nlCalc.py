@@ -101,7 +101,8 @@ def convertToNumbers(string):
 
         if isNumber(word.lower(), numwords):
             idx += 1
-            while(idx < len(oldarr) and isNumber(oldarr[idx].lower(), numwords)):
+            while(idx < len(oldarr) and
+                    isNumber(oldarr[idx].lower(), numwords)):
                 word = word + ' ' + oldarr[idx].lower()
                 idx += 1
             result = convertWordToNumber(word, numwords)
@@ -134,6 +135,7 @@ def convertWordToNumber(string, numwords):
             raise ValueError("Word is neither digit nor digit")
     result = result + current
     return str(result)
+
 
 def isNumber(string, numwords):
     """ checks if a number is a number """
