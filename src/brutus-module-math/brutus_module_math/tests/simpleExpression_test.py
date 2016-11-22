@@ -24,12 +24,12 @@ class SimpleExpressionTestCase(BrutusTestCase):
                0: 'zero', 1: 'one', 2: 'two', 10: 'ten',
                11: 'eleven', 12: 'twelve', 13: 'thirteen',
                14: 'fourteen', 15: 'fifteen', 16: 'sixteen',
-               17: 'seventeen', 18: 'eighteen', 19: 'ninteen',
+               17: 'seventeen', 18: 'eighteen', 19: 'nineteen',
                20: 'twenty', 30: 'thirty', 40: 'fourty',
                50: 'fifty', 66: 'sixty six', 70: 'seventy',
-               80: 'eighty', 90: 'ninty', 200: 'two hundred',
+               80: 'eighty', 90: 'ninety', 200: 'two hundred',
                100: 'a hundred', 1000: 'thousand',
-               10000: 'ten thousand', 1000000: 'billion'}
+               10000: 'ten thousand', 1000000000: 'billion'}
 
     def test_addition(self):
         sym = '+'
@@ -52,17 +52,6 @@ class SimpleExpressionTestCase(BrutusTestCase):
                         text = self.create_question(prefix, n1Text, n2Text, op)
                         answer = self.create_answer(n1Digit, n2Digit, sym, a)
                         assert self.get_result(text) == answer, text
-
-    def test_subtractedFrom(self):
-        sym = '-'
-        op = 'subtracted from'
-        for prefix in self.prefixes:
-            for n1Digit, n1Text in self.numbers.items():
-                for n2Digit, n2Text in self.numbers.items():
-                    a = n1Digit - n2Digit
-                    text = self.create_question(prefix, n1Text, n2Text, op)
-                    answer = self.create_answer(n1Digit, n2Digit, sym, a)
-                    assert self.get_result(text) == answer, text
 
     def test_multiplication(self):
         sym = '*'
