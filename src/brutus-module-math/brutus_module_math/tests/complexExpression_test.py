@@ -46,7 +46,7 @@ class ComplexExpressionTestCase(BrutusTestCase):
                         resp = self.get_result(query)
                     except:
                         print(query)
-                    assert self.get_result(query) == expected_response, query
+                    assert resp == expected_response, query
 
     """
     add together terms for question
