@@ -114,5 +114,5 @@ class BasicTestCase(BrutusTestCase):
             'id': request_id,
             'input': request_data,
             'output': {'text': '2'},
-            'module': 'math',
+            'session_id': 1,
             'status': 'finished'}

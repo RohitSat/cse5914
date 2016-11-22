@@ -1,7 +1,11 @@
+define \n
+
+
+endef
+
 # project settings
 TOP := $(shell pwd)
-PROJECTS := brutus-api brutus-module-math brutus-module-weather
-
+PROJECTS := brutus-api brutus-module-math brutus-module-weather brutus-module-jokes
 ##
 # general
 ##
@@ -43,12 +47,8 @@ test: test-style test-unit
 
 test-style:
 	@$(foreach project,$(PROJECTS), \
-		cd src/$(project); \
-		$(MAKE) test-style; \
-		cd $(TOP); )
+		$(MAKE) -C $(TOP)/src/$(project) test-style ${\n})
 
 test-unit:
 	@$(foreach project,$(PROJECTS), \
-		cd src/$(project); \
-		$(MAKE) test-unit; \
-		cd $(TOP); )
+		$(MAKE) -C $(TOP)/src/$(project) test-unit ${\n})
