@@ -33,7 +33,7 @@ INSERT INTO joke_parts(id, jokeId, part) values(NULL, (SELECT MAX(id) from jokes
 
 --INSERT INTO jokes (id, type) values (3, 1);
 --INSERT INTO joke_parts(id, jokeId, part) values( Knock, knock.INSERT INTO joke_parts(id, jokeId, part) values(" Wooden shoe INSERT INTO joke_parts(id, jokeId, part) values(" Wooden shoe like to hear another joke?
---                
+--
 --INSERT INTO jokes (id, type) values (3, 1);
 --INSERT INTO joke_parts(id, jokeId, part) values( Knock, knock.INSERT INTO joke_parts(id, jokeId, part) values(" A broken pencil. INSERT INTO joke_parts(id, jokeId, part) values(" Oh never mind it’s pointless.
 --
@@ -56,7 +56,7 @@ INSERT INTO joke_parts(id, jokeId, part) values(NULL, (SELECT MAX(id) from jokes
 --INSERT INTO joke_parts(id, jokeId, part) values( Knock, knock.INSERT INTO joke_parts(id, jokeId, part) values(" Who’s there?INSERT INTO joke_parts(id, jokeId, part) values(" Iva. INSERT INTO joke_parts(id, jokeId, part) values(" Iva who? INSERT INTO joke_parts(id, jokeId, part) values(" I’ve a sore hand from knocking!
 --
 -- INSERT INTO joke_parts(id, jokeId, part) values( Knock, knock.INSERT INTO joke_parts(id, jokeId, part) values(" Who’s there?INSERT INTO joke_parts(id, jokeId, part) values(" Avenue. INSERT INTO joke_parts(id, jokeId, part) values(" Avenue who? INSERT INTO joke_parts(id, jokeId, part) values(" Avenue knocked on this door before?
---                    
+--
 --INSERT INTO joke_parts(id, jokeId, part) values( Knock, knock.INSERT INTO joke_parts(id, jokeId, part) values(" Who’s there?INSERT INTO joke_parts(id, jokeId, part) values(" A little old lady. INSERT INTO joke_parts(id, jokeId, part) values(" A little old lady who? INSERT INTO joke_parts(id, jokeId, part) values(" I didn’t know you could yodel.
 --
 --INSERT INTO joke_parts(id, jokeId, part) values( Knock, knock.INSERT INTO joke_parts(id, jokeId, part) values(" Who’s there? INSERT INTO joke_parts(id, jokeId, part) values(" Banana. INSERT INTO joke_parts(id, jokeId, part) values(" Banana who? INSERT INTO joke_parts(id, jokeId, part) values(" Knock, knock. INSERT INTO joke_parts(id, jokeId, part) values(" Who’s there? INSERT INTO joke_parts(id, jokeId, part) values(" Banana. INSERT INTO joke_parts(id, jokeId, part) values(" Banana who? INSERT INTO joke_parts(id, jokeId, part) values(" Knock, knock. INSERT INTO joke_parts(id, jokeId, part) values(" Who’s there? INSERT INTO joke_parts(id, jokeId, part) values(" Banana. INSERT INTO joke_parts(id, jokeId, part) values(" Banana who? INSERT INTO joke_parts(id, jokeId, part) values(" Knock, knock. INSERT INTO joke_parts(id, jokeId, part) values(" Who’s there? INSERT INTO joke_parts(id, jokeId, part) values(" Orange. INSERT INTO joke_parts(id, jokeId, part) values(" Orange who? INSERT INTO joke_parts(id, jokeId, part) values(" Orange you glad I didn’t say banana?
@@ -70,7 +70,7 @@ INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from joke
 INSERT INTO jokes (id, type) values (NULL, "question");
 INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), "Why was six scared of seven?");
 INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), "Because seven ate nine. ");
-        
+
 INSERT INTO jokes (id, type) values (NULL, "question");
 INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), "Can a kangaroo jump higher than the Empire State Building?");
 INSERT INTO joke_parts(id, jokeId, part) values (NULL, (SELECT MAX(id) from jokes), "Of course. The Empire State Building can not jump");
