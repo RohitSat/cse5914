@@ -1,4 +1,5 @@
 import sqlite3
+import logging
 import requests
 from redis import Redis
 from rq import get_current_job
@@ -16,6 +17,9 @@ def process_request(request_id):
         -wait for the module to respond
         -set the result
     """
+
+    # retrieve the module logger
+    logger = logging.getLogger("brutus_api")
 
     # connect to the database
     db = connect_db(app.config['DATABASE'])
@@ -128,6 +132,9 @@ def process_request(request_id):
         db.commit()
 
     except Exception as e:
+        # debugging
+        logger.exception(e)
+
         # update the request with a failed state and generic error message
         db.execute(
             "UPDATE request SET status = 'failed', output = ? WHERE id = ?",
