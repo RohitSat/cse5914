@@ -14,6 +14,7 @@ def find_document(question):
     retrieve_and_rank = RetrieveAndRankV1(
         username=app.config['RAR_WATSON_USERNAME'],
         password=app.config['RAR_WATSON_PASSWORD'])
+
     pysolr_client = retrieve_and_rank.get_pysolr_client(
         app.config['RAR_WATSON_CLUSTER_ID'],
         app.config['RAR_WATSON_COLLECTION_NAME'])
