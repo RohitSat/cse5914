@@ -1,6 +1,8 @@
 gunicorn==19.6.0
 Flask==0.11.1
 
+pysolr==3.5.0 # bug in 3.6.0
+
 # testing
 pep8==1.7.0
 pytest==3.0.2
